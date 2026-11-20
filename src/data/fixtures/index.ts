@@ -16,3 +16,4 @@ export * from './investigations';
 export * from './agentPayments';
 export * from './compliance';
 export * from './responses';
+export * from './detectionRules';

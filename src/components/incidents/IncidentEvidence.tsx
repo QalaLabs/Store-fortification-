@@ -113,7 +113,7 @@ export function IncidentEvidence({ incident, allEvents }: IncidentEvidenceProps)
           </div>
           <div className="p-3 rounded-lg bg-[#090e17] border border-[#1b2a45] text-xs text-slate-400 space-y-1">
             <p className="text-[11px]">
-              • Attacker infrastructure identity: Exact VPN/Tor exit provider unverified without external threat intel feed.
+              • Attacker infrastructure identity: Exact VPN/Tor exit provider unverified without external threat intel feed (source IP 198.51.100.42 is an RFC 5737 synthetic documentation test IP).
             </p>
             <p className="text-[11px]">
               • External data persistence: Whether dumped data has been propagated outside immediate adversary host.

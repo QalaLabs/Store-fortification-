@@ -74,7 +74,7 @@ export function PrivacyCentre() {
             </Link>
           </div>
           <p className="text-[11px] text-slate-300">
-            Automated purpose inspection detected 4,520 customer &amp; order history records dispatched to external unapproved IP <strong>198.51.100.42 (Bucharest, RO)</strong> under compromised session <code>sess-tok-84729a1b</code> without step-up OTP challenge.
+            Automated purpose inspection detected 4,520 customer &amp; order history records dispatched to external unapproved destination <strong>198.51.100.42 (Synthetic Test IP RFC 5737, Bucharest RO simulation)</strong> under compromised session <code>sess-tok-84729a1b</code> without step-up OTP challenge.
           </p>
         </div>
       )}

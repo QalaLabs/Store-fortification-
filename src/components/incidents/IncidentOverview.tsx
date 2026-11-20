@@ -33,14 +33,24 @@ export function IncidentOverview({ incident }: IncidentOverviewProps) {
           <span>Back to Incidents</span>
         </Link>
 
-        {/* Action to Jump into AI Investigator */}
-        <Link
-          href={`/investigate?incidentId=${incident.id}`}
-          className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-md bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold shadow transition-colors"
-        >
-          <Sparkles className="h-3.5 w-3.5 text-cyan-300" />
-          <span>Open in AI Investigator</span>
-        </Link>
+        {/* Actions to Jump into AI Investigator and Response Centre */}
+        <div className="flex items-center gap-2">
+          <Link
+            href="/operations/response"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-amber-600/20 hover:bg-amber-600/30 text-amber-300 border border-amber-500/40 text-xs font-semibold transition-colors"
+          >
+            <ShieldAlert className="h-3.5 w-3.5 text-amber-400" />
+            <span>Response Centre</span>
+          </Link>
+
+          <Link
+            href={`/investigate?incidentId=${incident.id}`}
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-md bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold shadow transition-colors"
+          >
+            <Sparkles className="h-3.5 w-3.5 text-cyan-300" />
+            <span>Open in AI Investigator</span>
+          </Link>
+        </div>
       </div>
 
       {/* Main title & Badges */}

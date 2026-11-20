@@ -63,12 +63,18 @@ export function DryRunModal({
               <span className="text-xl font-mono font-bold text-emerald-400 mt-0.5 block">
                 -{action.dryRun.expectedRiskReductionPercent}%
               </span>
+              <span className="text-[10px] text-slate-500 italic block mt-0.5">
+                (Illustrative dry-run estimate)
+              </span>
             </div>
 
             <div className="p-3 rounded bg-[#090e17] border border-[#1b2a45]">
               <span className="text-[10px] text-slate-400 uppercase block">Collateral Disruption</span>
               <span className="text-xl font-mono font-bold text-slate-100 mt-0.5 block">
                 {action.dryRun.affectedLegitimateUsersEstimate} Users
+              </span>
+              <span className="text-[10px] text-slate-500 italic block mt-0.5">
+                (Simulated projection)
               </span>
             </div>
           </div>

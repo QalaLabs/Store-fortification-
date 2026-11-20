@@ -19,10 +19,15 @@ export function AuditHistoryTable({ records }: AuditHistoryTableProps) {
     <Card>
       <CardHeader>
         <div className="flex items-center justify-between w-full">
-          <CardTitle>
-            <ShieldCheck className="h-4 w-4 text-emerald-400" />
-            <span>Immutable Response Audit Journal</span>
-          </CardTitle>
+          <div>
+            <CardTitle>
+              <ShieldCheck className="h-4 w-4 text-emerald-400" />
+              <span>Response Audit Journal</span>
+            </CardTitle>
+            <p className="text-[11px] text-slate-400 mt-0.5">
+              Local simulated audit records with demonstration integrity hashes (simulated ledger)
+            </p>
+          </div>
           <span className="text-xs text-slate-400 font-mono">
             {records.length} Audit Entries Logged
           </span>
@@ -140,11 +145,14 @@ export function AuditHistoryTable({ records }: AuditHistoryTableProps) {
 
                 <div className="pt-2">
                   <span className="text-[10px] uppercase font-semibold text-slate-400 block mb-1">
-                    Cryptographic Integrity Hash:
+                    Integrity Hash (Local Simulated SHA-256):
                   </span>
                   <div className="font-mono text-[10px] bg-[#05080f] p-2.5 rounded border border-slate-800 text-cyan-300 break-all">
                     {selectedRecord.immutableHash}
                   </div>
+                  <span className="text-[10px] text-slate-500 italic block mt-1">
+                    *Demonstration cryptographic hash generated in local environment.
+                  </span>
                 </div>
               </div>
 

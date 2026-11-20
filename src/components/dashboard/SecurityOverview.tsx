@@ -10,7 +10,8 @@ import { IntegrationStatus } from './IntegrationStatus';
 import { ThreatDistribution } from './ThreatDistribution';
 import { ResponseActivity } from './ResponseActivity';
 import { Badge } from '@/components/ui/Badge';
-import { Play, Sparkles, RefreshCw, AlertCircle, X, ShieldAlert } from 'lucide-react';
+import Link from 'next/link';
+import { Play, Sparkles, RefreshCw, AlertCircle, X, ShieldAlert, ArrowRight, Radio } from 'lucide-react';
 import { formatTimestamp } from '@/lib/formatters';
 
 export function SecurityOverview() {
@@ -25,25 +26,62 @@ export function SecurityOverview() {
   const handleTriggerReplay = (scenarioName: string) => {
     setShowSimulateModal(false);
     setSimulationBanner(
-      `Scenario Replay Triggered: "${scenarioName}". Replay events staged. Full live execution pipeline will stream in Phase 2.`
+      `Scenario Staged: "${scenarioName}". Follow the end-to-end security journey below.`
     );
   };
 
   return (
     <div className="space-y-6">
-      {/* Simulation Banner Notification */}
+      {/* Simulation Banner Notification with End-to-End Demo Journey Links */}
       {simulationBanner && (
-        <div className="p-3 bg-blue-950/40 border border-blue-500/40 rounded-lg flex items-center justify-between gap-3 text-xs text-blue-200 animate-in fade-in-50">
-          <div className="flex items-center gap-2">
-            <Sparkles className="h-4 w-4 text-blue-400 shrink-0" />
-            <span>{simulationBanner}</span>
+        <div className="p-4 bg-gradient-to-r from-blue-950/60 via-[#0d1524] to-[#0d1524] border border-blue-500/50 rounded-xl space-y-3 animate-in fade-in-50">
+          <div className="flex items-center justify-between gap-3 text-xs text-blue-200">
+            <div className="flex items-center gap-2">
+              <Sparkles className="h-4 w-4 text-cyan-400 shrink-0" />
+              <span className="font-semibold">{simulationBanner}</span>
+            </div>
+            <button
+              onClick={() => setSimulationBanner(null)}
+              className="p-1 hover:bg-blue-900/40 rounded text-slate-400 hover:text-white"
+            >
+              <X className="h-3.5 w-3.5" />
+            </button>
           </div>
-          <button
-            onClick={() => setSimulationBanner(null)}
-            className="p-1 hover:bg-blue-900/40 rounded text-slate-400 hover:text-white"
-          >
-            <X className="h-3.5 w-3.5" />
-          </button>
+
+          <div className="flex flex-wrap items-center gap-2 text-xs pt-1 border-t border-blue-500/20">
+            <span className="text-slate-400 font-semibold text-[11px] mr-1">Demo Journey Path:</span>
+            <Link
+              href="/threats/live"
+              className="px-2.5 py-1 rounded bg-[#090e17] hover:bg-slate-800 text-slate-200 border border-[#1b2a45] hover:border-blue-500/50 flex items-center gap-1 transition-colors"
+            >
+              <Radio className="h-3 w-3 text-emerald-400" />
+              <span>1. Live Signals</span>
+            </Link>
+            <span className="text-slate-600">&rarr;</span>
+            <Link
+              href="/incidents/INC-2026-0841"
+              className="px-2.5 py-1 rounded bg-[#090e17] hover:bg-slate-800 text-slate-200 border border-[#1b2a45] hover:border-red-500/50 flex items-center gap-1 transition-colors"
+            >
+              <ShieldAlert className="h-3 w-3 text-red-400" />
+              <span>2. Incident Dossier (INC-0841)</span>
+            </Link>
+            <span className="text-slate-600">&rarr;</span>
+            <Link
+              href="/investigate?incidentId=INC-2026-0841"
+              className="px-2.5 py-1 rounded bg-[#090e17] hover:bg-slate-800 text-slate-200 border border-[#1b2a45] hover:border-cyan-500/50 flex items-center gap-1 transition-colors"
+            >
+              <Sparkles className="h-3 w-3 text-cyan-400" />
+              <span>3. AI Investigation</span>
+            </Link>
+            <span className="text-slate-600">&rarr;</span>
+            <Link
+              href="/operations/response"
+              className="px-2.5 py-1 rounded bg-amber-600/20 hover:bg-amber-600/30 text-amber-300 border border-amber-500/40 flex items-center gap-1 font-semibold transition-colors"
+            >
+              <span>4. Response Centre (Approve Containment)</span>
+              <ArrowRight className="h-3 w-3" />
+            </Link>
+          </div>
         </div>
       )}
 
@@ -205,12 +243,21 @@ export function SecurityOverview() {
               </button>
             </div>
 
-            <div className="flex justify-end pt-2">
+            <div className="flex items-center justify-between pt-2 border-t border-[#1b2a45]">
+              <Link
+                href="/threats/live"
+                onClick={() => setShowSimulateModal(false)}
+                className="px-3.5 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold rounded-lg flex items-center gap-1.5 transition-colors shadow-sm"
+              >
+                <span>Launch Live Feed Demo</span>
+                <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
+
               <button
                 onClick={() => setShowSimulateModal(false)}
                 className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium rounded-lg"
               >
-                Cancel
+                Close
               </button>
             </div>
           </div>

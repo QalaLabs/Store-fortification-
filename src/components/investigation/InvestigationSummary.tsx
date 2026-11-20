@@ -1,4 +1,4 @@
-import React from 'react';
+import Link from 'next/link';
 import { IncidentInvestigation } from '@/types/investigation';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
@@ -9,6 +9,7 @@ import {
   Zap,
   HelpCircle,
   ShieldCheck,
+  ArrowRight,
 } from 'lucide-react';
 
 interface InvestigationSummaryProps {
@@ -83,9 +84,18 @@ export function InvestigationSummary({ investigation }: InvestigationSummaryProp
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="p-3 bg-emerald-950/20 rounded-lg border border-emerald-500/30 text-xs text-emerald-200 space-y-1.5">
+            <div className="p-3 bg-emerald-950/20 rounded-lg border border-emerald-500/30 text-xs text-emerald-200 space-y-2">
               <span className="font-bold block">Analyst Action Priority:</span>
               <p className="leading-relaxed">{investigation.recommendedImmediateAction}</p>
+              <div className="pt-2 border-t border-emerald-500/20 flex justify-end">
+                <Link
+                  href="/operations/response"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold text-xs transition-colors"
+                >
+                  <span>Authorize in Response Centre</span>
+                  <ArrowRight className="h-3.5 w-3.5" />
+                </Link>
+              </div>
             </div>
           </CardContent>
         </Card>
