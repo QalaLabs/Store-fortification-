@@ -6,6 +6,8 @@ import { detectionEngine } from "@/lib/rules";
 import { eventCorrelator } from "@/lib/correlate";
 import crypto from "crypto";
 
+export const dynamic = "force-dynamic";
+
 /**
  * POST /api/events
  * Real Deterministic Pipeline:

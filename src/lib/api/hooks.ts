@@ -92,6 +92,7 @@ export function useEvents(filters?: EventFilterParams) {
     } finally {
       setIsLoading(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters?.severity, filters?.source, filters?.type, filters?.search, filters?.limit]);
 
   useEffect(() => {
@@ -132,6 +133,7 @@ export function useIncidents(filters?: IncidentFilterParams) {
     } finally {
       setIsLoading(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filters?.status, filters?.severity, filters?.search, filters?.sort]);
 
   useEffect(() => {

@@ -1,0 +1,21 @@
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - corepack enable || true
+        - corepack prepare pnpm@11.25.0 --activate || npm install -g pnpm@11.25.0
+        - pnpm --version
+        - pnpm install --frozen-lockfile
+    build:
+      commands:
+        - pnpm run build
+  artifacts:
+    baseDirectory: .next
+    files:
+      - '**/*'
+  cache:
+    paths:
+      - .next/cache/**/*
+      - node_modules/**/*
+      - $(pnpm store path)/**/*

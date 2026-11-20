@@ -7,8 +7,9 @@ export default defineConfig({
     globals: true,
   },
   resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "./"),
-    },
+    alias: [
+      { find: /^@\/app\/(.*)/, replacement: path.resolve(__dirname, "./src/app/$1") },
+      { find: "@", replacement: path.resolve(__dirname, "./") },
+    ],
   },
 });
