@@ -143,7 +143,8 @@ describe("Detection rules R6–R8", () => {
     const baseMandate = {
       limit: 50,
       merchantScope: ["merch_acme"],
-      expiry: "2026-11-20T12:00:00.000Z",
+      // Must be after makeEvent's fixed timestamp (12:00Z); R8 treats event time >= expiry as expired.
+      expiry: "2026-11-20T18:00:00.000Z",
     };
 
     it("does not trigger when all five mandate checks pass", async () => {
@@ -185,6 +186,23 @@ describe("Detection rules R6–R8", () => {
       expect(finding?.metadata?.violations).toEqual(
         expect.arrayContaining(["PAYMENT_METHOD_MISMATCH", "LIMIT_EXCEEDED"])
       );
+    });
+
+    it("triggers HIGH when the mandate has expired at event time", async () => {
+      const event = makeEvent({
+        eventType: "payment.agent",
+        accountRole: "agent",
+        agentId: "agent_1",
+        principalId: "usr_p",
+        paymentMethodOwner: "usr_p",
+        paymentAmount: 22,
+        destination: "merch_acme",
+        mandate: { ...baseMandate, expiry: "2026-11-20T12:00:00.000Z" },
+        dataCategory: "PAYMENT",
+      });
+      const finding = await rule.evaluate(event, { recentEvents: [] });
+      expect(finding?.severity).toBe("HIGH");
+      expect(finding?.metadata?.violations).toEqual(["MANDATE_EXPIRED"]);
     });
 
     it("fails closed with CRITICAL when mandate is missing", async () => {
