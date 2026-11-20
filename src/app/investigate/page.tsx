@@ -1,20 +1,21 @@
-import { PlaceholderPage } from '@/components/ui/PlaceholderPage';
-import { Sparkles } from 'lucide-react';
+import { InvestigationWorkspace } from '@/components/investigation/InvestigationWorkspace';
+import { syntheticIncidents } from '@/data/fixtures/incidents';
+import { syntheticSecurityEvents } from '@/data/fixtures/events';
+import { syntheticInvestigations } from '@/data/fixtures/investigations';
 
-export default function InvestigatePage() {
+interface InvestigatePageProps {
+  searchParams?: {
+    incidentId?: string;
+  };
+}
+
+export default function InvestigatePage({ searchParams }: InvestigatePageProps) {
   return (
-    <PlaceholderPage
-      title="AI Investigation"
-      category="INVESTIGATE"
-      plannedPhase="Phase 3 Scheduled (AI Specialist Lead)"
-      description="Amazon Bedrock / Mock Provider security reasoning engine producing explainable evidence hypotheses."
-      icon={Sparkles}
-      keyCapabilities={[
-        'Truthful Bedrock vs local mock provider status banner',
-        'Structured security investigation synthesis',
-        'Evidence citation and hypothesis vs fact separation',
-        'One-click containment recommendations',
-      ]}
+    <InvestigationWorkspace
+      incidents={syntheticIncidents}
+      allEvents={syntheticSecurityEvents}
+      investigations={syntheticInvestigations}
+      initialIncidentId={searchParams?.incidentId}
     />
   );
 }

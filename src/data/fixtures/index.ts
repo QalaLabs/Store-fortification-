@@ -12,3 +12,4 @@ export * from './events';
 export * from './incidents';
 export * from './integrations';
 export * from './dashboard';
+export * from './investigations';
