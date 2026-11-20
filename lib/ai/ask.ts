@@ -1,4 +1,9 @@
+import {
+  assertNoSystemPromptLeak,
+  assertSafeQuestion,
+} from "@/lib/guard";
 import type { InvestigationResult } from "@/lib/types";
+import { SYSTEM_PROMPT } from "./prompts";
 
 export const PRESET_QUESTIONS = [
   "Why is this critical?",
@@ -72,20 +77,31 @@ function answerUnknowns(result: InvestigationResult): string {
  * Unknown questions are refused so this path cannot free-generate.
  */
 export function ask(result: InvestigationResult, question: string): string {
+  assertSafeQuestion(question);
   const preset = presetKey(question);
   if (!preset) {
     throw new Error(`Only preset investigation questions can be answered. Choose one of: ${PRESET_QUESTIONS.join(" | ")}`);
   }
+
+  let answer: string;
   switch (preset) {
     case "Why is this critical?":
-      return answerWhy(result);
+      answer = answerWhy(result);
+      break;
     case "Which events support the conclusion?":
-      return answerEvents(result);
+      answer = answerEvents(result);
+      break;
     case "What data may be affected?":
-      return answerData(result);
+      answer = answerData(result);
+      break;
     case "What should the team do first?":
-      return answerFirst(result);
+      answer = answerFirst(result);
+      break;
     case "What remains unverified?":
-      return answerUnknowns(result);
+      answer = answerUnknowns(result);
+      break;
   }
+
+  assertNoSystemPromptLeak(answer, SYSTEM_PROMPT);
+  return answer;
 }

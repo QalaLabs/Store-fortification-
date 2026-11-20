@@ -25,16 +25,34 @@ const BANNED_WORDING: ReadonlyArray<readonly [RegExp, string]> = [
   [/\bCONNECTED\b/, "the CONNECTED provider status"],
 ];
 
-/** Wording that would present a proposal as skipping human approval. */
+/**
+ * Approver-targeted social engineering and approval-skipping wording.
+ * Fail closed — the pipeline ends at a human reading these prose fields.
+ */
 const UNSAFE_ACTION = new RegExp(
   [
     "\\bauto[- ]?approve",
+    "\\bauto[- ]?close",
+    "\\bno action needed",
+    "\\bclose\\s+as\\s+false\\s+positive",
+    "\\bapprove\\s+and\\s+(?:close|archive)",
     "\\bwithout (analyst|human) (approval|review)",
     "\\bbypass(es|ing)? (the )?(analyst |human )?approval",
     "\\bexecute[ds]? (it |this )?(automatically|immediately|now)",
+    "\\bskip\\s+(?:review|approval)",
   ].join("|"),
   "i",
 );
+
+/** Event-id-like tokens (evt_… / evt-…) that may appear in free-text prose. */
+const EVENT_ID_TOKEN = /\b(evt[_-][A-Za-z0-9_-]+)\b/g;
+
+const PII_PATTERNS: Array<{ id: string; pattern: RegExp }> = [
+  { id: "ssn", pattern: /\bssn\s*:?\s*\d{3}-\d{2}-\d{4}\b/gi },
+  { id: "ssn-bare", pattern: /\b\d{3}-\d{2}-\d{4}\b/g },
+  { id: "aadhaar", pattern: /\b\d{4}\s\d{4}\s\d{4}\b/g },
+  { id: "pan", pattern: /\b[A-Z]{5}\d{4}[A-Z]\b/g },
+];
 
 function reject(message: string, issues?: unknown): never {
   throw new InvestigationValidationError(`Investigation output was rejected: ${message}`, issues);
@@ -44,6 +62,39 @@ function labelHypothesis(hypothesis: string): string {
   const body = hypothesis.replace(/^hypothesis\s*:?\s*/i, "").trim();
   if (!body) reject("rootCauseHypothesis has no content.");
   return `Hypothesis: ${body}`;
+}
+
+function sanitizeProse(
+  text: string,
+  field: string,
+  allowed: ReadonlySet<string>,
+  notes: string[],
+): string {
+  let out = text;
+
+  if (UNSAFE_ACTION.test(out)) {
+    reject(`${field} contains approver social-engineering or approval-skipping language.`);
+  }
+
+  const foundIds = out.match(EVENT_ID_TOKEN) ?? [];
+  const uncited = [...new Set(foundIds.filter((id) => !allowed.has(id)))];
+  if (uncited.length > 0) {
+    for (const id of uncited) {
+      out = out.split(id).join("[UNCITED_EVENT_ID]");
+    }
+    notes.push(`${field}: removed ${uncited.length} uncited event id(s) from prose.`);
+  }
+
+  for (const { id, pattern } of PII_PATTERNS) {
+    pattern.lastIndex = 0;
+    if (pattern.test(out)) {
+      pattern.lastIndex = 0;
+      out = out.replace(pattern, `[REDACTED_${id.toUpperCase()}]`);
+      notes.push(`${field}: redacted ${id}-shaped token(s).`);
+    }
+  }
+
+  return out.trim();
 }
 
 function textFields(result: InvestigationResult): Array<[string, string]> {
@@ -67,6 +118,7 @@ function textFields(result: InvestigationResult): Array<[string, string]> {
  * - rootCauseHypothesis is labelled "Hypothesis:"
  * - providerUsed comes from the caller, never from model text
  * - no certification / compliance / CONNECTED claims, no approval-skipping wording
+ * - prose fields cannot smuggle uncited event IDs or PII-shaped tokens
  */
 export function validateInvestigationResult(
   raw: unknown,
@@ -99,6 +151,7 @@ export function validateInvestigationResult(
   }
   if (evidence.length === 0) reject("no confirmedEvidence item cites an event ID on this incident.");
 
+  const proseNotes: string[] = [];
   const unknowns = parsed.data.unknownsAndLimitations.map((u) => u.trim()).filter(Boolean);
   if (stripped > 0) {
     unknowns.push(`${stripped} evidence item(s) were removed because they cited event IDs outside this incident.`);
@@ -107,11 +160,31 @@ export function validateInvestigationResult(
 
   const result: InvestigationResult = {
     ...parsed.data,
-    executiveSummary: parsed.data.executiveSummary.trim(),
-    confirmedEvidence: evidence,
-    rootCauseHypothesis: labelHypothesis(parsed.data.rootCauseHypothesis),
-    businessImpact: parsed.data.businessImpact.trim(),
-    unknownsAndLimitations: unknowns,
+    executiveSummary: sanitizeProse(parsed.data.executiveSummary.trim(), "executiveSummary", allowed, proseNotes),
+    confirmedEvidence: evidence.map((item) => ({
+      ...item,
+      finding: sanitizeProse(item.finding, "confirmedEvidence.finding", allowed, proseNotes),
+    })),
+    rootCauseHypothesis: sanitizeProse(
+      labelHypothesis(parsed.data.rootCauseHypothesis),
+      "rootCauseHypothesis",
+      allowed,
+      proseNotes,
+    ),
+    businessImpact: sanitizeProse(parsed.data.businessImpact.trim(), "businessImpact", allowed, proseNotes),
+    recommendedResponse: {
+      ...parsed.data.recommendedResponse,
+      rationale: sanitizeProse(
+        parsed.data.recommendedResponse.rationale.trim(),
+        "recommendedResponse.rationale",
+        allowed,
+        proseNotes,
+      ),
+    },
+    unknownsAndLimitations: [
+      ...unknowns.map((u, i) => sanitizeProse(u, `unknownsAndLimitations[${i}]`, allowed, proseNotes)),
+      ...proseNotes,
+    ],
     providerUsed: options.providerUsed,
     investigatedAt: parsed.data.investigatedAt ?? (options.now ?? new Date()).toISOString(),
   };
@@ -121,8 +194,16 @@ export function validateInvestigationResult(
       if (pattern.test(text)) reject(`${field} contains ${what}.`);
     }
   }
-  if (UNSAFE_ACTION.test(result.recommendedResponse.rationale)) {
-    reject("recommendedResponse.rationale implies acting without analyst approval.");
+
+  const blob = textFields(result)
+    .map(([, t]) => t)
+    .join("\n");
+  const stray = [...blob.matchAll(EVENT_ID_TOKEN)]
+    .map((m) => m[1]!)
+    .filter((id) => !allowed.has(id));
+  if (stray.length > 0) {
+    reject(`uncited event id(s) remain in output (${[...new Set(stray)].join(", ")}).`);
   }
+
   return result;
 }
