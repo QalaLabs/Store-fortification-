@@ -1,6 +1,8 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
+import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { AgentPaymentTransaction, VerificationOutcome } from '@/types/agentPayment';
 import { TransactionDetailDrawer } from './TransactionDetailDrawer';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
@@ -17,6 +19,7 @@ import {
   ExternalLink,
   Lock,
   UserCheck,
+  ShieldAlert,
 } from 'lucide-react';
 import { useAgentPayments } from '@/lib/api';
 
@@ -27,11 +30,23 @@ interface AgentPaymentVerificationProps {
 export function AgentPaymentVerification({
   initialTransactions,
 }: AgentPaymentVerificationProps) {
+  const searchParams = useSearchParams();
+  const highlightTxId = searchParams.get('highlightTx');
+
   const { transactions: apiTransactions, isLoading, error, mode } = useAgentPayments();
   const transactions = initialTransactions || apiTransactions;
   const [selectedTx, setSelectedTx] = useState<AgentPaymentTransaction | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [outcomeFilter, setOutcomeFilter] = useState<VerificationOutcome | 'ALL'>('ALL');
+
+  useEffect(() => {
+    if (highlightTxId && transactions.length > 0) {
+      const match = transactions.find((t) => t.id === highlightTxId);
+      if (match) {
+        setSelectedTx(match);
+      }
+    }
+  }, [highlightTxId, transactions]);
 
   // Stats
   const totalCount = transactions.length;
@@ -147,6 +162,57 @@ export function AgentPaymentVerification({
         </div>
       </div>
 
+      {/* S1 Connected Demo Story Banner: Incident INC-2026-0841 Cross-Reference */}
+      <div className="p-4 rounded-xl bg-gradient-to-r from-red-950/40 via-[#0d1524] to-[#0d1524] border border-red-500/50 space-y-2.5">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div className="flex items-center gap-2">
+            <ShieldAlert className="h-4 w-4 text-red-400" />
+            <span className="text-xs font-bold text-red-300 uppercase tracking-wider">
+              Step 5 in Connected Product Story: Correlated Agent Violation (R8 / Who Pays?)
+            </span>
+            <Badge variant="critical" size="sm">INC-2026-0841</Badge>
+          </div>
+          <Link
+            href="/incidents/INC-2026-0841"
+            className="text-xs text-blue-400 hover:text-blue-300 font-semibold flex items-center gap-1 self-start sm:self-auto"
+          >
+            <span>Back to Incident Dossier</span>
+            <ArrowRight className="h-3.5 w-3.5" />
+          </Link>
+        </div>
+        <p className="text-xs text-slate-300 leading-relaxed">
+          Under compromised session <code>sess-tok-84729a1b</code> (Victim: <strong>Victoria Sterling</strong>, <code>usr-vip-9902</code>), an unauthorized checkout agent attempted an $850.00 luxury purchase using an unlinked credit card registered to <strong>Elena Rostova</strong> (<code>pm-visa-8802</code>). CARTGUARD R8 blocked the checkout due to <strong>OWNERSHIP_MISMATCH</strong>.
+        </p>
+        <div className="flex flex-wrap items-center gap-2 pt-1 text-xs">
+          <button
+            onClick={() => {
+              const tx = transactions.find((t) => t.id === 'tx-agent-2026-8804');
+              if (tx) setSelectedTx(tx);
+            }}
+            className="px-3 py-1.5 rounded bg-red-600/30 hover:bg-red-600/50 text-red-200 border border-red-500/50 font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"
+          >
+            <AlertTriangle className="h-3.5 w-3.5 text-red-400" />
+            <span>Demonstrate Ownership Mismatch (tx-agent-2026-8804)</span>
+          </button>
+          <button
+            onClick={() => {
+              const tx = transactions.find((t) => t.id === 'tx-agent-2026-8801');
+              if (tx) setSelectedTx(tx);
+            }}
+            className="px-3 py-1.5 rounded bg-emerald-600/30 hover:bg-emerald-600/50 text-emerald-200 border border-emerald-500/50 font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"
+          >
+            <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" />
+            <span>Demonstrate Verified Case (&quot;Verified: paid by Sarah Miller through ShopBot&quot;)</span>
+          </button>
+          <Link
+            href="/operations/response#audit-trail"
+            className="px-3 py-1.5 rounded bg-[#090e17] hover:bg-slate-800 text-slate-300 border border-[#1b2a45] font-semibold flex items-center gap-1 transition-colors"
+          >
+            <span>Step 6: Inspect Audit Journal &rarr;</span>
+          </Link>
+        </div>
+      </div>
+
       {/* The Central Concept Callout */}
       <div className="p-4 rounded-lg bg-[#0d1524] border border-[#1b2a45] space-y-2">
         <div className="flex items-center justify-between">
@@ -206,6 +272,81 @@ export function AgentPaymentVerification({
             </select>
           </div>
         </div>
+
+        {/* Outcome Filter Quick Pills */}
+        <div className="flex items-center gap-1.5 flex-wrap pt-2 border-t border-[#1b2a45]/60 text-xs">
+          <span className="text-[11px] text-slate-400 font-semibold mr-1">Quick Outcome Filters:</span>
+          <button
+            onClick={() => setOutcomeFilter('ALL')}
+            className={`px-2 py-0.5 rounded text-[11px] font-medium transition-colors ${
+              outcomeFilter === 'ALL'
+                ? 'bg-blue-600 text-white shadow-sm'
+                : 'bg-[#090e17] text-slate-400 hover:text-slate-200 border border-[#1b2a45]'
+            }`}
+          >
+            All (6)
+          </button>
+          <button
+            onClick={() => setOutcomeFilter('VERIFIED')}
+            className={`px-2 py-0.5 rounded text-[11px] font-medium transition-colors ${
+              outcomeFilter === 'VERIFIED'
+                ? 'bg-emerald-600 text-white shadow-sm'
+                : 'bg-[#090e17] text-emerald-400 hover:text-emerald-300 border border-[#1b2a45]'
+            }`}
+          >
+            Verified (1)
+          </button>
+          <button
+            onClick={() => setOutcomeFilter('OWNERSHIP_MISMATCH')}
+            className={`px-2 py-0.5 rounded text-[11px] font-medium transition-colors ${
+              outcomeFilter === 'OWNERSHIP_MISMATCH'
+                ? 'bg-red-600 text-white shadow-sm'
+                : 'bg-[#090e17] text-red-400 hover:text-red-300 border border-red-500/40'
+            }`}
+          >
+            Ownership Mismatch (1 - INC-0841)
+          </button>
+          <button
+            onClick={() => setOutcomeFilter('LIMIT_EXCEEDED')}
+            className={`px-2 py-0.5 rounded text-[11px] font-medium transition-colors ${
+              outcomeFilter === 'LIMIT_EXCEEDED'
+                ? 'bg-amber-600 text-white shadow-sm'
+                : 'bg-[#090e17] text-amber-400 hover:text-amber-300 border border-[#1b2a45]'
+            }`}
+          >
+            Limit Exceeded (1)
+          </button>
+          <button
+            onClick={() => setOutcomeFilter('EXPIRED_MANDATE')}
+            className={`px-2 py-0.5 rounded text-[11px] font-medium transition-colors ${
+              outcomeFilter === 'EXPIRED_MANDATE'
+                ? 'bg-slate-700 text-white shadow-sm'
+                : 'bg-[#090e17] text-slate-400 hover:text-slate-200 border border-[#1b2a45]'
+            }`}
+          >
+            Expired Mandate (1)
+          </button>
+          <button
+            onClick={() => setOutcomeFilter('UNAUTHORIZED_MERCHANT')}
+            className={`px-2 py-0.5 rounded text-[11px] font-medium transition-colors ${
+              outcomeFilter === 'UNAUTHORIZED_MERCHANT'
+                ? 'bg-slate-700 text-white shadow-sm'
+                : 'bg-[#090e17] text-slate-400 hover:text-slate-200 border border-[#1b2a45]'
+            }`}
+          >
+            Unauthorized Merchant (1)
+          </button>
+          <button
+            onClick={() => setOutcomeFilter('INSUFFICIENT_EVIDENCE')}
+            className={`px-2 py-0.5 rounded text-[11px] font-medium transition-colors ${
+              outcomeFilter === 'INSUFFICIENT_EVIDENCE'
+                ? 'bg-slate-700 text-white shadow-sm'
+                : 'bg-[#090e17] text-slate-400 hover:text-slate-200 border border-[#1b2a45]'
+            }`}
+          >
+            Insufficient Evidence (1)
+          </button>
+        </div>
       </div>
 
       {/* Transactions Table */}
@@ -237,7 +378,19 @@ export function AgentPaymentVerification({
                     onClick={() => setSelectedTx(tx)}
                   >
                     <td className="py-3.5 px-4 font-mono font-bold text-blue-400 whitespace-nowrap">
-                      {tx.id}
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <span>{tx.id}</span>
+                        {tx.id === 'tx-agent-2026-8804' && (
+                          <Badge variant="critical" size="sm">
+                            INC-0841 P0
+                          </Badge>
+                        )}
+                        {tx.id === 'tx-agent-2026-8801' && (
+                          <Badge variant="success" size="sm">
+                            VERIFIED
+                          </Badge>
+                        )}
+                      </div>
                     </td>
 
                     <td className="py-3.5 px-3">

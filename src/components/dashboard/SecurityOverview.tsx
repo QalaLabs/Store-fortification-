@@ -11,7 +11,7 @@ import { ThreatDistribution } from './ThreatDistribution';
 import { ResponseActivity } from './ResponseActivity';
 import { Badge } from '@/components/ui/Badge';
 import Link from 'next/link';
-import { Play, Sparkles, RefreshCw, AlertCircle, X, ShieldAlert, ArrowRight, Radio } from 'lucide-react';
+import { Play, Sparkles, RefreshCw, AlertCircle, X, ShieldAlert, ArrowRight, Radio, Bot, ShieldCheck } from 'lucide-react';
 import { formatTimestamp } from '@/lib/formatters';
 
 export function SecurityOverview() {
@@ -101,7 +101,7 @@ export function SecurityOverview() {
               className="px-2.5 py-1 rounded bg-[#090e17] hover:bg-slate-800 text-slate-200 border border-[#1b2a45] hover:border-red-500/50 flex items-center gap-1 transition-colors"
             >
               <ShieldAlert className="h-3 w-3 text-red-400" />
-              <span>2. Incident Dossier (INC-0841)</span>
+              <span>2. Incident Dossier</span>
             </Link>
             <span className="text-slate-600">&rarr;</span>
             <Link
@@ -114,9 +114,25 @@ export function SecurityOverview() {
             <span className="text-slate-600">&rarr;</span>
             <Link
               href="/operations/response"
+              className="px-2.5 py-1 rounded bg-[#090e17] hover:bg-slate-800 text-slate-200 border border-[#1b2a45] hover:border-amber-500/50 flex items-center gap-1 transition-colors"
+            >
+              <ShieldCheck className="h-3 w-3 text-amber-400" />
+              <span>4. Human Approval</span>
+            </Link>
+            <span className="text-slate-600">&rarr;</span>
+            <Link
+              href="/identity/agents?highlightTx=tx-agent-2026-8804"
+              className="px-2.5 py-1 rounded bg-[#090e17] hover:bg-slate-800 text-slate-200 border border-[#1b2a45] hover:border-purple-500/50 flex items-center gap-1 transition-colors"
+            >
+              <Bot className="h-3 w-3 text-purple-400" />
+              <span>5. Agent Verification (R8)</span>
+            </Link>
+            <span className="text-slate-600">&rarr;</span>
+            <Link
+              href="/operations/response#audit-trail"
               className="px-2.5 py-1 rounded bg-amber-600/20 hover:bg-amber-600/30 text-amber-300 border border-amber-500/40 flex items-center gap-1 font-semibold transition-colors"
             >
-              <span>4. Response Centre (Approve Containment)</span>
+              <span>6. Audit Ledger</span>
               <ArrowRight className="h-3 w-3" />
             </Link>
           </div>

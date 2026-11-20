@@ -195,10 +195,14 @@ export function TransactionDetailDrawer({
           <div className="flex items-center gap-2">
             {!isVerified && (
               <Link
-                href="/incidents"
+                href={transaction.id === 'tx-agent-2026-8804' ? '/incidents/INC-2026-0841' : '/incidents'}
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-red-950/60 hover:bg-red-900/60 text-red-300 border border-red-500/40 text-xs font-semibold transition-colors"
               >
-                <span>Investigate in Incident Queue</span>
+                <span>
+                  {transaction.id === 'tx-agent-2026-8804'
+                    ? 'Open Correlated Incident (INC-2026-0841)'
+                    : 'Investigate in Incident Queue'}
+                </span>
                 <ArrowRight className="h-3.5 w-3.5" />
               </Link>
             )}

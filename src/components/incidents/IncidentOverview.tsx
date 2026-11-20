@@ -12,6 +12,7 @@ import {
   Clock,
   Layers,
   CheckCircle2,
+  Bot,
 } from 'lucide-react';
 
 interface IncidentOverviewProps {
@@ -33,8 +34,18 @@ export function IncidentOverview({ incident }: IncidentOverviewProps) {
           <span>Back to Incidents</span>
         </Link>
 
-        {/* Actions to Jump into AI Investigator and Response Centre */}
-        <div className="flex items-center gap-2">
+        {/* Actions to Jump into AI Investigator, Response Centre, and R8 Agent Verification */}
+        <div className="flex items-center gap-2 flex-wrap">
+          {incident.id === 'INC-2026-0841' && (
+            <Link
+              href="/identity/agents?highlightTx=tx-agent-2026-8804"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-purple-950/40 hover:bg-purple-900/40 text-purple-300 border border-purple-500/40 text-xs font-semibold transition-colors"
+            >
+              <Bot className="h-3.5 w-3.5 text-purple-400" />
+              <span>R8 Mandate (Ownership Mismatch)</span>
+            </Link>
+          )}
+
           <Link
             href="/operations/response"
             className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-amber-600/20 hover:bg-amber-600/30 text-amber-300 border border-amber-500/40 text-xs font-semibold transition-colors"

@@ -10,6 +10,7 @@ import {
   HelpCircle,
   ShieldCheck,
   ArrowRight,
+  Bot,
 } from 'lucide-react';
 
 interface InvestigationSummaryProps {
@@ -87,7 +88,15 @@ export function InvestigationSummary({ investigation }: InvestigationSummaryProp
             <div className="p-3 bg-emerald-950/20 rounded-lg border border-emerald-500/30 text-xs text-emerald-200 space-y-2">
               <span className="font-bold block">Analyst Action Priority:</span>
               <p className="leading-relaxed">{investigation.recommendedImmediateAction}</p>
-              <div className="pt-2 border-t border-emerald-500/20 flex justify-end">
+              <div className="pt-2 border-t border-emerald-500/20 flex flex-wrap items-center justify-between gap-2">
+                <Link
+                  href="/identity/agents?highlightTx=tx-agent-2026-8804"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-purple-950/60 hover:bg-purple-900/60 text-purple-300 border border-purple-500/40 text-xs font-medium transition-colors"
+                >
+                  <Bot className="h-3.5 w-3.5 text-purple-400" />
+                  <span>Inspect R8 Agent Violation</span>
+                </Link>
+
                 <Link
                   href="/operations/response"
                   className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold text-xs transition-colors"

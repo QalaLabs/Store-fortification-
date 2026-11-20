@@ -20,6 +20,7 @@ import {
   ArrowRight,
   ExternalLink,
   ShieldAlert,
+  Bot,
 } from 'lucide-react';
 import { useResponseCentre } from '@/lib/api';
 
@@ -171,19 +172,39 @@ export function ResponseCentre({
         </div>
       </div>
 
-      {/* Feedback Banner */}
+      {/* Feedback Banner with Connected Next Step Navigation */}
       {feedbackBanner && (
-        <div className="p-3.5 rounded-lg bg-emerald-950/30 border border-emerald-500/40 text-xs text-emerald-200 flex items-center justify-between animate-in fade-in-50">
-          <div className="flex items-center gap-2">
-            <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
-            <span>{feedbackBanner}</span>
+        <div className="p-4 rounded-xl bg-gradient-to-r from-emerald-950/40 via-[#0d1524] to-[#0d1524] border border-emerald-500/50 text-xs text-emerald-200 space-y-2 animate-in fade-in-50">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
+              <span className="font-semibold">{feedbackBanner}</span>
+            </div>
+            <button
+              onClick={() => setFeedbackBanner(null)}
+              className="p-1 hover:bg-emerald-900/40 rounded text-slate-400 hover:text-white"
+            >
+              ✕
+            </button>
           </div>
-          <button
-            onClick={() => setFeedbackBanner(null)}
-            className="p-1 hover:bg-emerald-900/40 rounded text-slate-400 hover:text-white"
-          >
-            ✕
-          </button>
+
+          <div className="flex flex-wrap items-center gap-2 pt-1 border-t border-emerald-500/20 text-xs">
+            <span className="text-slate-400 font-semibold text-[11px] mr-1">Connected Next Steps:</span>
+            <Link
+              href="/identity/agents?highlightTx=tx-agent-2026-8804"
+              className="px-2.5 py-1 rounded bg-purple-950/60 hover:bg-purple-900/60 text-purple-300 border border-purple-500/40 flex items-center gap-1.5 font-medium transition-colors"
+            >
+              <Bot className="h-3.5 w-3.5 text-purple-400" />
+              <span>Step 5: Verify Correlated Autonomous Agent Mandate (R8)</span>
+              <ArrowRight className="h-3 w-3" />
+            </Link>
+            <a
+              href="#audit-trail"
+              className="px-2.5 py-1 rounded bg-[#090e17] hover:bg-slate-800 text-slate-300 border border-[#1b2a45] flex items-center gap-1 transition-colors"
+            >
+              <span>Step 6: Inspect Logged Entry in Audit Journal Below &darr;</span>
+            </a>
+          </div>
         </div>
       )}
 
@@ -359,7 +380,9 @@ export function ResponseCentre({
       </Card>
 
       {/* Immutable Audit Log Table */}
-      <AuditHistoryTable records={auditRecords} />
+      <div id="audit-trail">
+        <AuditHistoryTable records={auditRecords} />
+      </div>
 
       {/* Dry Run Detail Modal */}
       <DryRunModal
