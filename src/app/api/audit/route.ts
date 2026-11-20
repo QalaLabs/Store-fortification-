@@ -3,6 +3,8 @@ import { auditStore } from "@/lib/store";
 import { AuditQueryParamsSchema } from "@/lib/validation";
 import { successResponse, handleApiError } from "@/lib/utils/api-response";
 
+export const dynamic = "force-dynamic";
+
 /**
  * GET /api/audit
  * Returns immutable audit log entries detailing event ingestion,

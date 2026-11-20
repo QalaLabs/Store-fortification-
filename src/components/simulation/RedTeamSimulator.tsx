@@ -431,7 +431,7 @@ export function RedTeamSimulator() {
                         <span className="text-[10px] font-mono text-[#A2847B]">04</span>
                         <span className="text-xs font-semibold text-[#F3EEEC] group-hover:text-white">Agent Verification (R8)</span>
                       </div>
-                      <span className="text-[10px] text-[#756B67] block">Audit "Who Pays?" payer mismatch</span>
+                      <span className="text-[10px] text-[#756B67] block">Audit &quot;Who Pays?&quot; payer mismatch</span>
                     </div>
                     <ChevronRight className="h-4 w-4 text-[#756B67] group-hover:text-[#F3EEEC]" />
                   </Link>

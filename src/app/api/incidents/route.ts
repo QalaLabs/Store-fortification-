@@ -3,6 +3,8 @@ import { incidentStore } from "@/lib/store";
 import { IncidentQueryParamsSchema } from "@/lib/validation";
 import { successResponse, handleApiError } from "@/lib/utils/api-response";
 
+export const dynamic = "force-dynamic";
+
 /**
  * GET /api/incidents
  * Lists security incidents with optional filtering by severity and status.

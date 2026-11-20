@@ -1,0 +1,25 @@
+export {
+  scanEventsForInjection,
+  scanPromptInjection,
+  formatInjectionBlock,
+  formatInjectionWarning,
+  normalizeForScan,
+  compactForScan,
+  expandEncodedPayloads,
+  collectStringsDeep,
+  neutralizeInjectionDeep,
+  type InjectionFinding,
+  type InjectionScanResult,
+  type InjectionSeverity,
+} from "./prompt-injection";
+export {
+  PromptInjectionBlockedError,
+  SystemPromptLeakError,
+  assertSafeEvents,
+  assertSafeQuestion,
+  assertNoSystemPromptLeak,
+  detectSystemPromptLeak,
+  frameUntrusted,
+  gateEvents,
+  type EventGateResult,
+} from "./sanitize";
