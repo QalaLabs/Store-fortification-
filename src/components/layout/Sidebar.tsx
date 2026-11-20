@@ -175,6 +175,8 @@ export function Sidebar({
                 label="Identity & Access"
                 href="/identity"
                 icon={Users}
+                badge="R8"
+                badgeVariant="info"
                 isCollapsed={isCollapsed}
                 onNavigate={onCloseMobile}
               />

@@ -13,3 +13,6 @@ export * from './incidents';
 export * from './integrations';
 export * from './dashboard';
 export * from './investigations';
+export * from './agentPayments';
+export * from './compliance';
+export * from './responses';
