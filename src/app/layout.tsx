@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { AppShell } from '@/components/layout/AppShell';
+import { ApiProvider } from '@/lib/api';
 
 export const metadata: Metadata = {
   title: 'CARTGUARD AI — E-Commerce Security & Privacy Operations',
@@ -15,7 +16,9 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body className="bg-[#080d16] text-slate-100 min-h-screen">
-        <AppShell>{children}</AppShell>
+        <ApiProvider>
+          <AppShell>{children}</AppShell>
+        </ApiProvider>
       </body>
     </html>
   );

@@ -11,9 +11,14 @@ import {
   User,
   ShieldAlert,
   ChevronDown,
+  Database,
+  RefreshCw,
+  Server,
+  Zap,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/Badge';
+import { useApiContext } from '@/lib/api';
 
 export interface HeaderProps {
   onOpenMobileSidebar: () => void;
@@ -24,6 +29,18 @@ export function Header({ onOpenMobileSidebar }: HeaderProps) {
   const pathname = usePathname();
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const [showApiMenu, setShowApiMenu] = useState(false);
+
+  const {
+    dataMode,
+    dataSource,
+    modePreference,
+    setModePreference,
+    backendStatus,
+    isChecking,
+    checkHealth,
+    baseUrl,
+  } = useApiContext();
 
   // Derive route title
   const getPageTitle = (path: string | null) => {
@@ -99,10 +116,155 @@ export function Header({ onOpenMobileSidebar }: HeaderProps) {
 
       {/* Right: Telemetry Status, Notifications, User Profile */}
       <div className="flex items-center gap-3">
-        {/* Environment Indicator Pill */}
-        <div className="hidden sm:flex items-center gap-2 px-2.5 py-1 rounded bg-[#0d1524] border border-[#1b2a45] text-xs">
-          <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-          <span className="text-slate-300 font-medium text-[11px]">DEMO SOC</span>
+        {/* Centralized API & Environment Data Mode Pill */}
+        <div className="relative">
+          <button
+            onClick={() => {
+              setShowApiMenu(!showApiMenu);
+              setShowNotifications(false);
+              setShowProfileMenu(false);
+            }}
+            className={cn(
+              'hidden sm:flex items-center gap-2 px-2.5 py-1 rounded border text-xs transition-colors',
+              dataMode === 'LIVE'
+                ? 'bg-emerald-950/40 border-emerald-500/40 text-emerald-300 hover:bg-emerald-900/50'
+                : dataMode === 'ERROR'
+                ? 'bg-red-950/40 border-red-500/40 text-red-300 hover:bg-red-900/50'
+                : 'bg-blue-950/40 border-blue-500/40 text-blue-300 hover:bg-blue-900/50'
+            )}
+            title="Click to view API integration status and data mode options"
+          >
+            <span
+              className={cn(
+                'h-2 w-2 rounded-full',
+                dataMode === 'LIVE'
+                  ? 'bg-emerald-400 animate-pulse'
+                  : dataMode === 'ERROR'
+                  ? 'bg-red-400'
+                  : 'bg-blue-400'
+              )}
+            />
+            <span className="font-semibold text-[11px] tracking-wide">
+              {dataMode === 'LIVE' ? 'LIVE MODE' : dataMode === 'ERROR' ? 'API ERROR' : 'DEMO MODE'}
+            </span>
+            <span className="text-[10px] text-slate-400 font-mono">
+              ({dataSource === 'backend' ? 'API' : 'Fixtures'})
+            </span>
+            <ChevronDown className="h-3 w-3 text-slate-400 ml-0.5" />
+          </button>
+
+          {/* API & Data Mode Popover */}
+          {showApiMenu && (
+            <div className="absolute right-0 mt-2 w-84 bg-[#0d1524] border border-[#1b2a45] rounded-lg shadow-2xl z-50 p-3 text-xs animate-in fade-in-50">
+              <div className="flex items-center justify-between pb-2 border-b border-[#1b2a45]">
+                <div className="flex items-center gap-1.5 font-semibold text-slate-200">
+                  <Database className="h-4 w-4 text-blue-400" />
+                  <span>Frontend Data Layer</span>
+                </div>
+                <Badge
+                  variant={dataMode === 'LIVE' ? 'success' : dataMode === 'ERROR' ? 'error' : 'info'}
+                  size="sm"
+                >
+                  {dataMode}
+                </Badge>
+              </div>
+
+              {/* Mode Details */}
+              <div className="py-2.5 space-y-2 text-[11px]">
+                <div className="flex justify-between items-center text-slate-300">
+                  <span className="text-slate-400">Data Provider:</span>
+                  <span className="font-medium text-slate-200">
+                    {dataSource === 'backend' ? 'Verified Backend API' : 'Synthetic Fixtures (Demo Safe)'}
+                  </span>
+                </div>
+
+                <div className="flex justify-between items-center text-slate-300">
+                  <span className="text-slate-400">Backend Endpoint:</span>
+                  <span className="font-mono text-[10px] text-slate-400 truncate max-w-[170px]" title={baseUrl}>
+                    {baseUrl}
+                  </span>
+                </div>
+
+                <div className="flex justify-between items-center text-slate-300">
+                  <span className="text-slate-400">Connection:</span>
+                  <span
+                    className={cn(
+                      'font-medium flex items-center gap-1',
+                      backendStatus.online ? 'text-emerald-400' : 'text-amber-400'
+                    )}
+                  >
+                    <span
+                      className={cn(
+                        'h-1.5 w-1.5 rounded-full',
+                        backendStatus.online ? 'bg-emerald-400' : 'bg-amber-400'
+                      )}
+                    />
+                    {backendStatus.online ? 'Online' : 'Offline / Unreachable'}
+                  </span>
+                </div>
+              </div>
+
+              {/* Preference selector */}
+              <div className="pt-2 border-t border-[#1b2a45]">
+                <p className="text-[10px] text-slate-400 uppercase tracking-wider mb-1.5 font-semibold">
+                  Data Mode Preference
+                </p>
+                <div className="grid grid-cols-3 gap-1 bg-[#090e17] p-1 rounded border border-[#1b2a45]">
+                  <button
+                    onClick={() => setModePreference('auto')}
+                    className={cn(
+                      'py-1 text-[10px] rounded font-medium transition-colors text-center',
+                      modePreference === 'auto'
+                        ? 'bg-blue-600 text-white shadow-sm'
+                        : 'text-slate-400 hover:text-slate-200'
+                    )}
+                  >
+                    Auto
+                  </button>
+                  <button
+                    onClick={() => setModePreference('demo')}
+                    className={cn(
+                      'py-1 text-[10px] rounded font-medium transition-colors text-center',
+                      modePreference === 'demo'
+                        ? 'bg-blue-600 text-white shadow-sm'
+                        : 'text-slate-400 hover:text-slate-200'
+                    )}
+                  >
+                    Demo
+                  </button>
+                  <button
+                    onClick={() => setModePreference('live')}
+                    className={cn(
+                      'py-1 text-[10px] rounded font-medium transition-colors text-center',
+                      modePreference === 'live'
+                        ? 'bg-blue-600 text-white shadow-sm'
+                        : 'text-slate-400 hover:text-slate-200'
+                    )}
+                  >
+                    Live API
+                  </button>
+                </div>
+              </div>
+
+              {/* Footer actions & disclaimer */}
+              <div className="mt-3 pt-2 border-t border-[#1b2a45] flex items-center justify-between text-[10px]">
+                <button
+                  onClick={() => checkHealth()}
+                  disabled={isChecking}
+                  className="flex items-center gap-1 text-slate-400 hover:text-slate-200 transition-colors disabled:opacity-50"
+                >
+                  <RefreshCw className={cn('h-3 w-3', isChecking && 'animate-spin')} />
+                  <span>{isChecking ? 'Checking...' : 'Check Connection'}</span>
+                </button>
+                <button
+                  onClick={() => setShowApiMenu(false)}
+                  className="text-blue-400 hover:text-blue-300 font-medium"
+                >
+                  Done
+                </button>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Notifications Dropdown */}

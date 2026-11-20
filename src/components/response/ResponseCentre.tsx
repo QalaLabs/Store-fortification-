@@ -21,101 +21,110 @@ import {
   ExternalLink,
   ShieldAlert,
 } from 'lucide-react';
+import { useResponseCentre } from '@/lib/api';
 
 interface ResponseCentreProps {
-  initialProposals: ProposedResponseAction[];
-  initialAuditRecords: ResponseAuditRecord[];
+  initialProposals?: ProposedResponseAction[];
+  initialAuditRecords?: ResponseAuditRecord[];
 }
 
 export function ResponseCentre({
   initialProposals,
   initialAuditRecords,
 }: ResponseCentreProps) {
-  const [proposals, setProposals] = useState<ProposedResponseAction[]>(initialProposals);
-  const [auditRecords, setAuditRecords] = useState<ResponseAuditRecord[]>(initialAuditRecords);
+  const {
+    proposals: apiProposals,
+    auditHistory: apiAuditRecords,
+    isLoading,
+    error,
+    mode,
+    submitDecision,
+  } = useResponseCentre();
+
+  const [localProposals, setLocalProposals] = useState<ProposedResponseAction[] | null>(null);
+  const [localAudit, setLocalAudit] = useState<ResponseAuditRecord[] | null>(null);
   const [inspectingAction, setInspectingAction] = useState<ProposedResponseAction | null>(null);
   const [feedbackBanner, setFeedbackBanner] = useState<string | null>(null);
+
+  const proposals = localProposals || (initialProposals && initialProposals.length ? initialProposals : apiProposals);
+  const auditRecords = localAudit || (initialAuditRecords && initialAuditRecords.length ? initialAuditRecords : apiAuditRecords);
 
   const pendingCount = proposals.filter((p) => p.stage === 'PENDING_APPROVAL').length;
   const executedCount = proposals.filter((p) => p.stage === 'EXECUTED_SIMULATED').length;
 
-  const handleApprove = (actionId: string) => {
+  const handleApprove = async (actionId: string) => {
     const action = proposals.find((p) => p.id === actionId);
     if (!action) return;
 
-    // Update proposal state to EXECUTED_SIMULATED
-    setProposals((prev) =>
-      prev.map((p) =>
-        p.id === actionId
-          ? {
-              ...p,
-              stage: 'EXECUTED_SIMULATED',
-              approver: 'Aayash (SecOps Analyst)',
-              approvalTimestamp: new Date().toISOString(),
-              executionOutcome: {
-                success: true,
-                executedTimestamp: new Date().toISOString(),
-                isSimulated: true,
-                auditLogId: `aud-${Date.now()}`,
-                summary: `Simulated ${p.category} action executed successfully.`,
-              },
-            }
-          : p
-      )
-    );
+    try {
+      const res = await submitDecision({
+        actionId,
+        decision: 'APPROVE',
+        approver: 'Aayash (SecOps Analyst)',
+        notes: `Simulated containment action approved. Blast radius: ${action.dryRun.estimatedBlastRadius}. Risk reduction: -${action.dryRun.expectedRiskReductionPercent}%.`,
+      });
 
-    // Append to audit trail
-    const newAuditRecord: ResponseAuditRecord = {
-      auditId: `aud-${Date.now()}`,
-      timestamp: new Date().toISOString(),
-      actionId: action.id,
-      incidentId: action.incidentId,
-      category: action.category,
-      actionTitle: action.title,
-      actor: 'Aayash (SecOps Analyst)',
-      actionState: 'SIMULATED_SUCCESS',
-      details: `Simulated containment action approved. Blast radius: ${action.dryRun.estimatedBlastRadius}. Risk reduction: -${action.dryRun.expectedRiskReductionPercent}%.`,
-      immutableHash: `sha256:${Math.random().toString(16).slice(2)}${Math.random().toString(16).slice(2)}`,
-    };
+      if (res?.data) {
+        setLocalProposals((prev) =>
+          (prev || proposals).map((p) => (p.id === actionId ? res.data.action : p))
+        );
+        setLocalAudit((prev) => [res.data.auditRecord, ...(prev || auditRecords)]);
+      }
+    } catch {
+      // Fallback local update
+      setLocalProposals((prev) =>
+        (prev || proposals).map((p) =>
+          p.id === actionId
+            ? {
+                ...p,
+                stage: 'EXECUTED_SIMULATED',
+                approver: 'Aayash (SecOps Analyst)',
+                approvalTimestamp: new Date().toISOString(),
+              }
+            : p
+        )
+      );
+    }
 
-    setAuditRecords((prev) => [newAuditRecord, ...prev]);
     setInspectingAction(null);
     setFeedbackBanner(
       `Action Approved: "${action.title}" executed in simulated mode and appended to immutable audit journal.`
     );
   };
 
-  const handleReject = (actionId: string) => {
+  const handleReject = async (actionId: string) => {
     const action = proposals.find((p) => p.id === actionId);
     if (!action) return;
 
-    setProposals((prev) =>
-      prev.map((p) =>
-        p.id === actionId
-          ? {
-              ...p,
-              stage: 'REJECTED',
-              approver: 'Aayash (SecOps Analyst)',
-              rejectionReason: 'Dismissed by analyst during dry-run review.',
-            }
-          : p
-      )
-    );
+    try {
+      const res = await submitDecision({
+        actionId,
+        decision: 'REJECT',
+        approver: 'Aayash (SecOps Analyst)',
+        notes: 'Dismissed by analyst during dry-run review.',
+      });
 
-    const newAuditRecord: ResponseAuditRecord = {
-      auditId: `aud-${Date.now()}`,
-      timestamp: new Date().toISOString(),
-      actionId: action.id,
-      incidentId: action.incidentId,
-      category: action.category,
-      actionTitle: action.title,
-      actor: 'Aayash (SecOps Analyst)',
-      actionState: 'REJECTED',
-      details: 'Analyst reviewed dry-run impact and rejected proposal.',
-      immutableHash: `sha256:${Math.random().toString(16).slice(2)}${Math.random().toString(16).slice(2)}`,
-    };
+      if (res?.data) {
+        setLocalProposals((prev) =>
+          (prev || proposals).map((p) => (p.id === actionId ? res.data.action : p))
+        );
+        setLocalAudit((prev) => [res.data.auditRecord, ...(prev || auditRecords)]);
+      }
+    } catch {
+      setLocalProposals((prev) =>
+        (prev || proposals).map((p) =>
+          p.id === actionId
+            ? {
+                ...p,
+                stage: 'REJECTED',
+                approver: 'Aayash (SecOps Analyst)',
+                rejectionReason: 'Dismissed by analyst during dry-run review.',
+              }
+            : p
+        )
+      );
+    }
 
-    setAuditRecords((prev) => [newAuditRecord, ...prev]);
     setInspectingAction(null);
     setFeedbackBanner(`Action Rejected: "${action.title}" proposal dismissed.`);
   };
@@ -132,6 +141,12 @@ export function ResponseCentre({
             </h2>
             <Badge variant="warning" size="sm" pulse={pendingCount > 0}>
               HUMAN-IN-THE-LOOP
+            </Badge>
+            <Badge
+              variant={mode === 'LIVE' ? 'success' : mode === 'ERROR' ? 'error' : 'neutral'}
+              size="sm"
+            >
+              {mode === 'LIVE' ? 'LIVE ACTIONS' : mode === 'ERROR' ? 'API DISCONNECTED' : 'DEMO MODE'}
             </Badge>
           </div>
           <p className="text-xs text-slate-400 mt-1 max-w-2xl">

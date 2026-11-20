@@ -19,14 +19,18 @@ import {
   Globe,
   Info,
   X,
+  AlertCircle,
+  RefreshCw,
 } from 'lucide-react';
+import { useEvents } from '@/lib/api';
 
 interface LiveThreatFeedProps {
-  initialEvents: SecurityEvent[];
+  initialEvents?: SecurityEvent[];
 }
 
 export function LiveThreatFeed({ initialEvents }: LiveThreatFeedProps) {
-  const [events] = useState<SecurityEvent[]>(initialEvents);
+  const { events: apiEvents, isLoading, error, mode, refetch } = useEvents();
+  const events = initialEvents || apiEvents;
   const [isStreaming, setIsStreaming] = useState(true);
   const [selectedSource, setSelectedSource] = useState<string>('ALL');
   const [selectedSeverity, setSelectedSeverity] = useState<string>('ALL');
@@ -61,6 +65,12 @@ export function LiveThreatFeed({ initialEvents }: LiveThreatFeedProps) {
             </h2>
             <Badge variant="info" size="sm" pulse={isStreaming}>
               {isStreaming ? 'STREAMING ACTIVE' : 'STREAM PAUSED'}
+            </Badge>
+            <Badge
+              variant={mode === 'LIVE' ? 'success' : mode === 'ERROR' ? 'error' : 'neutral'}
+              size="sm"
+            >
+              {mode === 'LIVE' ? 'LIVE DATA' : mode === 'ERROR' ? 'API ERROR' : 'DEMO MODE'}
             </Badge>
           </div>
           <p className="text-xs text-slate-400 mt-1 max-w-2xl">

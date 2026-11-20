@@ -1,8 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
-import { syntheticDetectionRules } from '@/data/fixtures/detectionRules';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { formatDateTime } from '@/lib/formatters';
@@ -16,9 +15,10 @@ import {
   ExternalLink,
   Sliders,
 } from 'lucide-react';
+import { useDetectionRules } from '@/lib/api';
 
 export function ThreatDetectionRules() {
-  const [rules] = useState(syntheticDetectionRules);
+  const { rules, isLoading, error, mode } = useDetectionRules();
 
   const activeRulesCount = rules.filter((r) => r.status === 'ACTIVE').length;
   const totalTriggers = rules.reduce((acc, r) => acc + r.triggerCount, 0);
@@ -35,6 +35,12 @@ export function ThreatDetectionRules() {
             </h2>
             <Badge variant="info" size="sm">
               DETERMINISTIC RULES
+            </Badge>
+            <Badge
+              variant={mode === 'LIVE' ? 'success' : mode === 'ERROR' ? 'error' : 'neutral'}
+              size="sm"
+            >
+              {mode === 'LIVE' ? 'LIVE RULES' : mode === 'ERROR' ? 'API DISCONNECTED' : 'DEMO MODE'}
             </Badge>
           </div>
           <p className="text-xs text-slate-400 mt-1 max-w-2xl">

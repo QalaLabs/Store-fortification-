@@ -20,6 +20,7 @@ import {
   ShieldAlert,
   ArrowRight,
 } from 'lucide-react';
+import { useInvestigation } from '@/lib/api';
 
 interface InvestigationWorkspaceProps {
   incidents: Incident[];
@@ -41,11 +42,12 @@ export function InvestigationWorkspace({
       : incidents[0]?.id || 'INC-2026-0841'
   );
 
+  const { investigation: apiInvestigation, mode: investigationMode } = useInvestigation(selectedIncidentId);
   const [inspectedEventId, setInspectedEventId] = useState<string | null>(null);
 
   const selectedIncident = incidents.find((i) => i.id === selectedIncidentId) || incidents[0];
   const currentInvestigation =
-    investigations[selectedIncidentId] || investigations[incidents[0]?.id];
+    apiInvestigation || investigations[selectedIncidentId] || investigations[incidents[0]?.id];
 
   const inspectedEvent = inspectedEventId
     ? allEvents.find((e) => e.id === inspectedEventId) || null
@@ -63,6 +65,12 @@ export function InvestigationWorkspace({
             </h2>
             <Badge variant="info" size="sm">
               SOC INVESTIGATOR
+            </Badge>
+            <Badge
+              variant={investigationMode === 'LIVE' ? 'success' : investigationMode === 'ERROR' ? 'error' : 'neutral'}
+              size="sm"
+            >
+              {investigationMode === 'LIVE' ? 'LIVE REASONING' : investigationMode === 'ERROR' ? 'API DISCONNECTED' : 'DEMO MODE'}
             </Badge>
           </div>
           <p className="text-xs text-slate-400 mt-1 max-w-2xl">

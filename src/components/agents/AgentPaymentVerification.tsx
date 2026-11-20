@@ -18,15 +18,17 @@ import {
   Lock,
   UserCheck,
 } from 'lucide-react';
+import { useAgentPayments } from '@/lib/api';
 
 interface AgentPaymentVerificationProps {
-  initialTransactions: AgentPaymentTransaction[];
+  initialTransactions?: AgentPaymentTransaction[];
 }
 
 export function AgentPaymentVerification({
   initialTransactions,
 }: AgentPaymentVerificationProps) {
-  const [transactions] = useState<AgentPaymentTransaction[]>(initialTransactions);
+  const { transactions: apiTransactions, isLoading, error, mode } = useAgentPayments();
+  const transactions = initialTransactions || apiTransactions;
   const [selectedTx, setSelectedTx] = useState<AgentPaymentTransaction | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [outcomeFilter, setOutcomeFilter] = useState<VerificationOutcome | 'ALL'>('ALL');
@@ -113,6 +115,12 @@ export function AgentPaymentVerification({
             </h2>
             <Badge variant="info" size="sm">
               WHO PAYS?
+            </Badge>
+            <Badge
+              variant={mode === 'LIVE' ? 'success' : mode === 'ERROR' ? 'error' : 'neutral'}
+              size="sm"
+            >
+              {mode === 'LIVE' ? 'LIVE VERIFICATION' : mode === 'ERROR' ? 'API DISCONNECTED' : 'DEMO MODE'}
             </Badge>
           </div>
           <p className="text-xs text-slate-400 mt-1 max-w-2xl">

@@ -3,8 +3,6 @@
 import React from 'react';
 import Link from 'next/link';
 import {
-  personalDataCategories,
-  accessPurposeMappings,
   privacyIncidentReferences,
 } from '@/data/fixtures/compliance';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
@@ -20,9 +18,11 @@ import {
   ExternalLink,
   ShieldCheck,
 } from 'lucide-react';
+import { useGovernance } from '@/lib/api';
 
 export function PrivacyCentre() {
-  const unapprovedDestinations = accessPurposeMappings.filter((m) => !m.isDestinationApproved);
+  const { accessPurposes, dataCategories, isLoading, error, mode } = useGovernance();
+  const unapprovedDestinations = accessPurposes.filter((m) => !m.isDestinationApproved);
 
   return (
     <div className="space-y-6">
@@ -36,6 +36,12 @@ export function PrivacyCentre() {
             </h2>
             <Badge variant="info" size="sm">
               DPDP ALIGNED
+            </Badge>
+            <Badge
+              variant={mode === 'LIVE' ? 'success' : mode === 'ERROR' ? 'error' : 'neutral'}
+              size="sm"
+            >
+              {mode === 'LIVE' ? 'LIVE CONTROLS' : mode === 'ERROR' ? 'API DISCONNECTED' : 'DEMO MODE'}
             </Badge>
           </div>
           <p className="text-xs text-slate-400 mt-1 max-w-2xl">
@@ -52,7 +58,7 @@ export function PrivacyCentre() {
           </div>
           <div className="bg-blue-950/40 px-3 py-1.5 rounded-lg border border-blue-500/40 text-xs">
             <span className="text-blue-300">Monitored Categories:</span>{' '}
-            <strong className="text-blue-200 font-mono">{personalDataCategories.length}</strong>
+            <strong className="text-blue-200 font-mono">{dataCategories.length}</strong>
           </div>
         </div>
       </div>
@@ -105,7 +111,7 @@ export function PrivacyCentre() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#1b2a45]/60 text-slate-300">
-                {accessPurposeMappings.map((item) => (
+                {accessPurposes.map((item) => (
                   <tr
                     key={item.id}
                     className={`hover:bg-[#121d31]/50 transition-colors ${

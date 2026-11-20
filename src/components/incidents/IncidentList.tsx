@@ -5,10 +5,11 @@ import { Incident } from '@/types/incidents';
 import { IncidentFilters, IncidentFiltersState } from './IncidentFilters';
 import { IncidentTable } from './IncidentTable';
 import { Badge } from '@/components/ui/Badge';
-import { FileWarning, ShieldAlert, AlertTriangle, UserCheck, Sparkles } from 'lucide-react';
+import { FileWarning, ShieldAlert, AlertTriangle, UserCheck, Sparkles, RefreshCw, AlertCircle } from 'lucide-react';
+import { useIncidents } from '@/lib/api';
 
 interface IncidentListProps {
-  initialIncidents: Incident[];
+  initialIncidents?: Incident[];
 }
 
 const defaultFilters: IncidentFiltersState = {
@@ -19,13 +20,15 @@ const defaultFilters: IncidentFiltersState = {
 };
 
 export function IncidentList({ initialIncidents }: IncidentListProps) {
+  const { incidents: apiIncidents, isLoading, error, mode, refetch } = useIncidents();
+  const incidents = initialIncidents || apiIncidents;
   const [filters, setFilters] = useState<IncidentFiltersState>(defaultFilters);
 
   // Compute header summary metrics
-  const totalCount = initialIncidents.length;
-  const criticalCount = initialIncidents.filter((i) => i.severity === 'critical').length;
-  const highCount = initialIncidents.filter((i) => i.severity === 'high').length;
-  const pendingApprovalCount = initialIncidents.filter(
+  const totalCount = incidents.length;
+  const criticalCount = incidents.filter((i) => i.severity === 'critical').length;
+  const highCount = incidents.filter((i) => i.severity === 'high').length;
+  const pendingApprovalCount = incidents.filter(
     (i) => i.recommendedAction.status === 'pending_approval'
   ).length;
 
@@ -37,7 +40,7 @@ export function IncidentList({ initialIncidents }: IncidentListProps) {
 
   // Filter and sort incidents
   const filteredIncidents = useMemo(() => {
-    return initialIncidents
+    return incidents
       .filter((incident) => {
         // Severity filter
         if (filters.severity !== 'all' && incident.severity !== filters.severity) {
@@ -80,7 +83,7 @@ export function IncidentList({ initialIncidents }: IncidentListProps) {
           return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
         return 0;
       });
-  }, [initialIncidents, filters]);
+  }, [incidents, filters]);
 
   return (
     <div className="space-y-6">
@@ -94,6 +97,12 @@ export function IncidentList({ initialIncidents }: IncidentListProps) {
             </h2>
             <Badge variant="info" size="sm">
               SOC TRIAGE
+            </Badge>
+            <Badge
+              variant={mode === 'LIVE' ? 'success' : mode === 'ERROR' ? 'error' : 'neutral'}
+              size="sm"
+            >
+              {mode === 'LIVE' ? 'LIVE DATA' : mode === 'ERROR' ? 'API DISCONNECTED' : 'DEMO MODE'}
             </Badge>
           </div>
           <p className="text-xs text-slate-400 mt-1 max-w-2xl">

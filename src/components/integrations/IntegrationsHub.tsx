@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState } from 'react';
-import { syntheticIntegrations } from '@/data/fixtures/integrations';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { formatDateTime } from '@/lib/formatters';
@@ -14,9 +13,10 @@ import {
   Info,
   RefreshCw,
 } from 'lucide-react';
+import { useIntegrations } from '@/lib/api';
 
 export function IntegrationsHub() {
-  const [integrations] = useState(syntheticIntegrations);
+  const { integrations, isLoading, error, mode } = useIntegrations();
   const [testLog, setTestLog] = useState<string | null>(null);
 
   const handleTestConnection = (name: string, serviceKey: string) => {
@@ -47,6 +47,12 @@ export function IntegrationsHub() {
             </h2>
             <Badge variant="info" size="sm">
               HYBRID SOC ADAPTERS
+            </Badge>
+            <Badge
+              variant={mode === 'LIVE' ? 'success' : mode === 'ERROR' ? 'error' : 'neutral'}
+              size="sm"
+            >
+              {mode === 'LIVE' ? 'LIVE ADAPTERS' : mode === 'ERROR' ? 'API DISCONNECTED' : 'DEMO MODE'}
             </Badge>
           </div>
           <p className="text-xs text-slate-400 mt-1 max-w-2xl">

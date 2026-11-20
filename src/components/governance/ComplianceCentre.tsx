@@ -1,12 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
-import {
-  dpdpReadinessControls,
-  pciDSSBoundaryControls,
-  personalDataCategories,
-} from '@/data/fixtures/compliance';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { formatDateTime } from '@/lib/formatters';
@@ -20,9 +15,11 @@ import {
   ExternalLink,
   Info,
 } from 'lucide-react';
+import { useGovernance } from '@/lib/api';
 
 export function ComplianceCentre() {
-  const [controls] = useState(dpdpReadinessControls);
+  const { dpdpControls, pciControls, dataCategories, isLoading, error, mode } = useGovernance();
+  const controls = dpdpControls;
 
   const alignedCount = controls.filter((c) => c.readinessStatus === 'READINESS_ALIGNED').length;
   const reviewRequiredCount = controls.filter((c) => c.readinessStatus === 'REVIEW_REQUIRED').length;
@@ -40,6 +37,12 @@ export function ComplianceCentre() {
             </h2>
             <Badge variant="info" size="sm">
               GOVERNANCE
+            </Badge>
+            <Badge
+              variant={mode === 'LIVE' ? 'success' : mode === 'ERROR' ? 'error' : 'neutral'}
+              size="sm"
+            >
+              {mode === 'LIVE' ? 'LIVE CONTROLS' : mode === 'ERROR' ? 'API DISCONNECTED' : 'DEMO MODE'}
             </Badge>
           </div>
           <p className="text-xs text-slate-400 mt-1 max-w-2xl">
@@ -167,7 +170,7 @@ export function ComplianceCentre() {
 
         <CardContent className="space-y-3">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            {pciDSSBoundaryControls.map((pci, i) => (
+            {pciControls.map((pci, i) => (
               <div
                 key={i}
                 className="p-3.5 rounded-lg bg-[#090e17] border border-[#1b2a45] space-y-2 text-xs"
@@ -211,7 +214,7 @@ export function ComplianceCentre() {
         </CardHeader>
 
         <CardContent className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-          {personalDataCategories.map((cat, i) => (
+          {dataCategories.map((cat, i) => (
             <div
               key={i}
               className="p-3 rounded-lg bg-[#090e17] border border-[#1b2a45] space-y-1.5 text-xs"

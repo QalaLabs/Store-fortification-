@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { syntheticDashboardSummary } from '@/data/fixtures/dashboard';
+import { useDashboardData, useSimulation } from '@/lib/api';
 import { MetricCard } from './MetricCard';
 import { ThreatActivity } from './ThreatActivity';
 import { ActiveIncidents } from './ActiveIncidents';
@@ -15,7 +15,8 @@ import { Play, Sparkles, RefreshCw, AlertCircle, X, ShieldAlert, ArrowRight, Rad
 import { formatTimestamp } from '@/lib/formatters';
 
 export function SecurityOverview() {
-  const [data, setData] = useState(syntheticDashboardSummary);
+  const { data, isLoading, error, mode, refetch } = useDashboardData();
+  const { isSimulating, runPrimaryAttack } = useSimulation();
   const [showSimulateModal, setShowSimulateModal] = useState(false);
   const [simulationBanner, setSimulationBanner] = useState<string | null>(null);
 
@@ -23,15 +24,52 @@ export function SecurityOverview() {
     setShowSimulateModal(true);
   };
 
-  const handleTriggerReplay = (scenarioName: string) => {
+  const handleTriggerReplay = async (scenarioName: string) => {
     setShowSimulateModal(false);
+    await runPrimaryAttack();
+    await refetch();
     setSimulationBanner(
       `Scenario Staged: "${scenarioName}". Follow the end-to-end security journey below.`
     );
   };
 
+  if (isLoading && !data) {
+    return (
+      <div className="space-y-6 animate-pulse">
+        <div className="h-10 bg-[#0d1524] rounded-lg w-1/3" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
+          {[...Array(5)].map((_, i) => (
+            <div key={i} className="h-28 bg-[#0d1524] rounded-xl border border-[#1b2a45]" />
+          ))}
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+          <div className="lg:col-span-2 h-64 bg-[#0d1524] rounded-xl border border-[#1b2a45]" />
+          <div className="h-64 bg-[#0d1524] rounded-xl border border-[#1b2a45]" />
+        </div>
+      </div>
+    );
+  }
+
+  const summary = data?.summary;
+  if (!summary) return null;
+
   return (
     <div className="space-y-6">
+      {/* Error state if in LIVE mode with backend failure */}
+      {error && mode === 'ERROR' && (
+        <div className="p-4 bg-red-950/40 border border-red-500/40 rounded-xl flex items-center justify-between text-xs text-red-200">
+          <div className="flex items-center gap-2">
+            <AlertCircle className="h-4 w-4 text-red-400 shrink-0" />
+            <span>{error}</span>
+          </div>
+          <button
+            onClick={() => refetch()}
+            className="px-3 py-1 bg-red-600 hover:bg-red-500 text-white font-medium rounded-md"
+          >
+            Retry Connection
+          </button>
+        </div>
+      )}
       {/* Simulation Banner Notification with End-to-End Demo Journey Links */}
       {simulationBanner && (
         <div className="p-4 bg-gradient-to-r from-blue-950/60 via-[#0d1524] to-[#0d1524] border border-blue-500/50 rounded-xl space-y-3 animate-in fade-in-50">
@@ -92,8 +130,12 @@ export function SecurityOverview() {
             <h2 className="text-2xl font-bold tracking-tight text-slate-100">
               Security Overview
             </h2>
-            <Badge variant="info" size="sm" pulse>
-              {data.environment.mode}
+            <Badge
+              variant={mode === 'LIVE' ? 'success' : mode === 'ERROR' ? 'error' : 'info'}
+              size="sm"
+              pulse={mode === 'LIVE'}
+            >
+              {mode === 'LIVE' ? 'LIVE DATA' : mode === 'ERROR' ? 'API DISCONNECTED' : 'DEMO MODE'}
             </Badge>
           </div>
           <p className="text-xs text-slate-400 mt-1 max-w-2xl leading-relaxed">
@@ -105,7 +147,7 @@ export function SecurityOverview() {
         <div className="flex items-center gap-3 flex-wrap">
           <div className="flex items-center gap-2 text-xs text-slate-400 bg-[#0d1524] px-3 py-1.5 rounded-md border border-[#1b2a45] font-mono">
             <RefreshCw className="h-3 w-3 text-slate-400" />
-            <span>Updated: {formatTimestamp(data.environment.lastUpdated)} UTC</span>
+            <span>Updated: {formatTimestamp(summary.environment.lastUpdated)} UTC</span>
           </div>
 
           <button
@@ -120,11 +162,11 @@ export function SecurityOverview() {
 
       {/* 5 KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
-        <MetricCard data={data.kpis.activeIncidents} />
-        <MetricCard data={data.kpis.criticalThreats} />
-        <MetricCard data={data.kpis.suspiciousApiRequests} />
-        <MetricCard data={data.kpis.affectedRecords} />
-        <MetricCard data={data.kpis.pendingApprovals} />
+        <MetricCard data={summary.kpis.activeIncidents} />
+        <MetricCard data={summary.kpis.criticalThreats} />
+        <MetricCard data={summary.kpis.suspiciousApiRequests} />
+        <MetricCard data={summary.kpis.affectedRecords} />
+        <MetricCard data={summary.kpis.pendingApprovals} />
       </div>
 
       {/* Row 2: Threat Activity Chart (2/3) & Threat Severity Distribution (1/3) */}
@@ -139,18 +181,18 @@ export function SecurityOverview() {
 
       {/* Row 3: Active Incidents (P0 / Correlated cases) */}
       <div>
-        <ActiveIncidents incidents={data.activeIncidents} />
+        <ActiveIncidents incidents={summary.activeIncidents} />
       </div>
 
       {/* Row 4: Recent Security Events Table */}
       <div>
-        <RecentEvents events={data.recentEvents} />
+        <RecentEvents events={summary.recentEvents} />
       </div>
 
       {/* Row 5: Recent Response Activity & Integration Health */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-        <ResponseActivity activities={data.recentResponses} />
-        <IntegrationStatus integrations={data.integrations} />
+        <ResponseActivity activities={data.recentActivity} />
+        <IntegrationStatus integrations={summary.integrations} />
       </div>
 
       {/* Simulate Attack Modal */}
