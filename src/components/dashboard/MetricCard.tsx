@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   ShieldAlert,
   AlertTriangle,
@@ -15,7 +15,40 @@ interface MetricCardProps {
   data: KPICardData;
 }
 
+/** rAF count-up (~600ms); skipped under prefers-reduced-motion. */
+function useCountUp(value: string | number): string | number {
+  const target = typeof value === 'number' ? value : Number(String(value).replace(/[^0-9.-]/g, ''));
+  const numeric = Number.isFinite(target) && String(value).trim() !== '';
+  const withCommas = typeof value === 'string' && value.includes(',');
+  const [shown, setShown] = useState<number>(numeric ? target : 0);
+  const shownRef = useRef(shown);
+  useEffect(() => {
+    if (!numeric) return;
+    const reduce = typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    if (reduce || shownRef.current === target) {
+      shownRef.current = target;
+      setShown(target);
+      return;
+    }
+    const from = shownRef.current;
+    const start = performance.now();
+    let raf = 0;
+    const step = (now: number) => {
+      const p = Math.min(1, (now - start) / 600);
+      const v = Math.round(from + (target - from) * p);
+      shownRef.current = v;
+      setShown(v);
+      if (p < 1) raf = requestAnimationFrame(step);
+    };
+    raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf);
+  }, [target, numeric]);
+  if (!numeric) return value;
+  return withCommas ? shown.toLocaleString('en-US') : shown;
+}
+
 export function MetricCard({ data }: MetricCardProps) {
+  const displayValue = useCountUp(data.value);
   const getIcon = () => {
     switch (data.iconName) {
       case 'shield-alert':
@@ -84,7 +117,7 @@ export function MetricCard({ data }: MetricCardProps) {
       {/* Metric Value */}
       <div className="mt-3 mb-1 flex items-baseline gap-1.5">
         <span className="text-2xl lg:text-3xl font-extrabold text-[#F3EEEC] font-mono tracking-tight">
-          {data.value}
+          {displayValue}
         </span>
         {data.unit && (
           <span className="text-xs text-[#756B67] font-medium">{data.unit}</span>

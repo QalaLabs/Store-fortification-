@@ -4,7 +4,7 @@
  *
  * NOTE:
  * Explicitly truthful integration telemetry. In accordance with project requirements,
- * all AWS/cloud provider connections are clearly flagged as SIMULATED or CONNECTED (UNTESTED).
+ * all AWS/cloud provider connections are clearly flagged as SIMULATED or CONFIGURED (UNTESTED).
  * Never present mock integrations as live production AWS services.
  */
 
@@ -30,7 +30,7 @@ export const syntheticIntegrations: Integration[] = [
     serviceKey: 'cloudtrail',
     category: 'AUDIT_LOGGING',
     status: 'connected_untested',
-    statusLabel: 'CONNECTED (UNTESTED)',
+    statusLabel: 'CONFIGURED (UNTESTED)',
     badgeVariant: 'info',
     lastSyncTimestamp: '2026-11-20T12:10:00Z',
     latencyMs: 310,

@@ -1,7 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
-import { useDashboardData, useSimulation } from '@/lib/api';
+import React, { useMemo, useState } from 'react';
+import Link from 'next/link';
+import { useDashboardData } from '@/lib/api';
 import { MetricCard } from './MetricCard';
 import { ThreatActivity } from './ThreatActivity';
 import { ActiveIncidents } from './ActiveIncidents';
@@ -10,132 +11,83 @@ import { IntegrationStatus } from './IntegrationStatus';
 import { ThreatDistribution } from './ThreatDistribution';
 import { ResponseActivity } from './ResponseActivity';
 import { Badge } from '@/components/ui/Badge';
-import Link from 'next/link';
-import { Play, Sparkles, RefreshCw, AlertCircle, X, ShieldAlert, ArrowRight, Radio, Bot, ShieldCheck } from 'lucide-react';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
+import { Play, RefreshCw, AlertCircle, X, ShieldAlert, ArrowRight, Bot, RotateCcw, Check, Ban } from 'lucide-react';
 import { formatTimestamp } from '@/lib/formatters';
+import { syntheticDashboardSummary, threatActivityData, severityDistribution, recentResponseActivities } from '@/data/fixtures/dashboard';
+import { SCENARIOS, APPROVAL_SECONDS, type ScenarioId } from '@/lib/sim/scenarios';
+import { useAttackRun, type Baseline, type BannerKind } from '@/lib/sim/useAttackRun';
+
+const FALLBACK: Baseline = {
+  summary: syntheticDashboardSummary,
+  threatActivity: threatActivityData,
+  severityDistribution,
+  recentActivity: recentResponseActivities,
+};
+
+const BANNER_STYLE: Record<BannerKind, string> = {
+  attack: 'bg-[#A20903] border-[#FCA5A5]/60 text-white sim-pulse',
+  approval: 'bg-[#92400E] border-[#FDE047]/60 text-white',
+  contained: 'bg-[#166534] border-[#86EFAC]/60 text-white',
+  escalating: 'bg-[#A20903] border-[#FCA5A5]/60 text-white sim-pulse',
+  unresolved: 'bg-[#7F1D1D] border-[#FCA5A5]/60 text-white sim-pulse',
+};
+
+const STAGE_COLOR: Record<string, string> = {
+  Detected: 'text-[#FCA5A5]',
+  Correlated: 'text-[#FDBA74]',
+  'AI investigating': 'text-[#A2847B]',
+  'Proposed response': 'text-[#FDE047]',
+  Containment: 'text-[#86EFAC]',
+  Alert: 'text-[#F87171]',
+};
 
 export function SecurityOverview() {
-  const { data, isLoading, error, mode, refetch } = useDashboardData();
-  const { isSimulating, runPrimaryAttack } = useSimulation();
+  const { data, error, mode, refetch } = useDashboardData();
+
+  // Baseline: live/API data when present, otherwise fixtures, so the sim never depends on the network.
+  const baseline: Baseline = useMemo(() => {
+    if (data && data.summary && data.summary.kpis && Array.isArray(data.summary.recentEvents) && data.summary.recentEvents.length > 0) {
+      return {
+        summary: data.summary,
+        threatActivity: data.threatActivity?.length ? data.threatActivity : FALLBACK.threatActivity,
+        severityDistribution: data.severityDistribution?.length ? data.severityDistribution : FALLBACK.severityDistribution,
+        recentActivity: data.recentActivity?.length ? data.recentActivity : FALLBACK.recentActivity,
+      };
+    }
+    return FALLBACK;
+  }, [data]);
+
+  const { state, view, start, decide, reset } = useAttackRun(baseline);
   const [showSimulateModal, setShowSimulateModal] = useState(false);
-  const [simulationBanner, setSimulationBanner] = useState<string | null>(null);
+  const [pick, setPick] = useState<ScenarioId>('S1');
 
-  const handleSimulateAttack = () => {
-    setShowSimulateModal(true);
-  };
-
-  const handleTriggerReplay = async (scenarioName: string) => {
-    setShowSimulateModal(false);
-    await runPrimaryAttack();
-    await refetch();
-    setSimulationBanner(
-      `Scenario Staged: "${scenarioName}". Follow the end-to-end security journey below.`
-    );
-  };
-
-  if (isLoading && !data) {
-    return (
-      <div className="space-y-6 animate-pulse">
-        <div className="h-10 bg-[#141211] rounded-lg w-1/3" />
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
-          {[...Array(5)].map((_, i) => (
-            <div key={i} className="h-28 bg-[#141211] rounded-xl border border-[#302A28]" />
-          ))}
-        </div>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-          <div className="lg:col-span-2 h-64 bg-[#141211] rounded-xl border border-[#302A28]" />
-          <div className="h-64 bg-[#141211] rounded-xl border border-[#302A28]" />
-        </div>
-      </div>
-    );
-  }
-
-  const summary = data?.summary;
-  if (!summary) return null;
+  const summary = baseline.summary;
+  const running = state.phase !== 'idle';
+  const sc = view.scenario;
 
   return (
     <div className="space-y-6">
-      {/* Error state if in LIVE mode with backend failure */}
+      {/* Sticky attack banner */}
+      {view.banner && (
+        <div className={`sticky top-0 z-40 px-4 py-2.5 rounded-lg border text-sm font-bold tracking-wide flex items-center justify-between gap-3 shadow-lg ${BANNER_STYLE[view.banner.kind]}`} role="status">
+          <span className="flex items-center gap-2">
+            <ShieldAlert className="h-4 w-4" />
+            {view.banner.text}
+          </span>
+          <span className="text-[11px] font-mono opacity-90">DEMO / SIMULATED - T+{state.tick}s</span>
+        </div>
+      )}
+
       {error && mode === 'ERROR' && (
         <div className="p-4 bg-[#5C1811]/30 border border-[#A20903]/40 rounded-xl flex items-center justify-between text-xs text-[#FCA5A5]">
           <div className="flex items-center gap-2">
             <AlertCircle className="h-4 w-4 text-[#A20903] shrink-0" />
-            <span>{error}</span>
+            <span>{error} (showing built-in demo data)</span>
           </div>
-          <button
-            onClick={() => refetch()}
-            className="px-3 py-1 bg-[#A20903] hover:bg-[#850702] text-[#F3EEEC] font-medium rounded-md"
-          >
+          <button onClick={() => refetch()} className="px-3 py-1 bg-[#A20903] hover:bg-[#850702] text-[#F3EEEC] font-medium rounded-md">
             Retry Connection
           </button>
-        </div>
-      )}
-      {/* Simulation Banner Notification with End-to-End Demo Journey Links */}
-      {simulationBanner && (
-        <div className="p-4 bg-[#141211] border border-[#A20903]/50 rounded-xl space-y-3 animate-in fade-in-50">
-          <div className="flex items-center justify-between gap-3 text-xs text-[#F3EEEC]">
-            <div className="flex items-center gap-2">
-              <Sparkles className="h-4 w-4 text-[#FCA5A5] shrink-0" />
-              <span className="font-semibold">{simulationBanner}</span>
-            </div>
-            <button
-              onClick={() => setSimulationBanner(null)}
-              className="p-1 hover:bg-[#1D1A19] rounded text-[#756B67] hover:text-[#F3EEEC]"
-            >
-              <X className="h-3.5 w-3.5" />
-            </button>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-2 text-xs pt-1 border-t border-[#302A28]">
-            <span className="text-[#756B67] font-semibold text-[11px] mr-1">Demo Journey Path:</span>
-            <Link
-              href="/threats/live"
-              className="px-2.5 py-1 rounded bg-[#1D1A19] hover:bg-[#221E1D] text-[#D0C4C0] border border-[#302A28] hover:border-[#4D4440] flex items-center gap-1.5 transition-colors"
-            >
-              <Radio className="h-3 w-3 text-[#4ADE80]" />
-              <span>1. Live Signals</span>
-            </Link>
-            <span className="text-[#756B67]">&rarr;</span>
-            <Link
-              href="/incidents/INC-2026-0841"
-              className="px-2.5 py-1 rounded bg-[#1D1A19] hover:bg-[#221E1D] text-[#D0C4C0] border border-[#302A28] hover:border-[#A20903]/50 flex items-center gap-1.5 transition-colors"
-            >
-              <ShieldAlert className="h-3 w-3 text-[#A20903]" />
-              <span>2. Incident Dossier</span>
-            </Link>
-            <span className="text-[#756B67]">&rarr;</span>
-            <Link
-              href="/investigate?incidentId=INC-2026-0841"
-              className="px-2.5 py-1 rounded bg-[#1D1A19] hover:bg-[#221E1D] text-[#D0C4C0] border border-[#302A28] hover:border-[#4D4440] flex items-center gap-1.5 transition-colors"
-            >
-              <Sparkles className="h-3 w-3 text-[#A2847B]" />
-              <span>3. AI Investigation</span>
-            </Link>
-            <span className="text-[#756B67]">&rarr;</span>
-            <Link
-              href="/operations/response"
-              className="px-2.5 py-1 rounded bg-[#1D1A19] hover:bg-[#221E1D] text-[#D0C4C0] border border-[#302A28] hover:border-[#4D4440] flex items-center gap-1.5 transition-colors"
-            >
-              <ShieldCheck className="h-3 w-3 text-[#D97706]" />
-              <span>4. Human Approval</span>
-            </Link>
-            <span className="text-[#756B67]">&rarr;</span>
-            <Link
-              href="/identity/agents?highlightTx=tx-agent-2026-8804"
-              className="px-2.5 py-1 rounded bg-[#1D1A19] hover:bg-[#221E1D] text-[#D0C4C0] border border-[#302A28] hover:border-[#4D4440] flex items-center gap-1.5 transition-colors"
-            >
-              <Bot className="h-3 w-3 text-[#A2847B]" />
-              <span>5. Agent Verification (R8)</span>
-            </Link>
-            <span className="text-[#756B67]">&rarr;</span>
-            <Link
-              href="/operations/response#audit-trail"
-              className="px-2.5 py-1 rounded bg-[#5C1811]/30 hover:bg-[#5C1811]/50 text-[#FCA5A5] border border-[#A20903]/40 flex items-center gap-1 font-semibold transition-colors"
-            >
-              <span>6. Audit Ledger</span>
-              <ArrowRight className="h-3 w-3" />
-            </Link>
-          </div>
         </div>
       )}
 
@@ -143,14 +95,8 @@ export function SecurityOverview() {
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-[#302A28]">
         <div>
           <div className="flex items-center gap-3">
-            <h2 className="text-2xl font-bold tracking-tight text-[#F3EEEC]">
-              Security Overview
-            </h2>
-            <Badge
-              variant={mode === 'LIVE' ? 'success' : mode === 'ERROR' ? 'error' : 'neutral'}
-              size="sm"
-              pulse={mode === 'LIVE'}
-            >
+            <h2 className="text-2xl font-bold tracking-tight text-[#F3EEEC]">Security Overview</h2>
+            <Badge variant={mode === 'LIVE' ? 'success' : mode === 'ERROR' ? 'error' : 'neutral'} size="sm" pulse={mode === 'LIVE'}>
               {mode === 'LIVE' ? 'LIVE DATA' : mode === 'ERROR' ? 'API DISCONNECTED' : 'DEMO MODE'}
             </Badge>
           </div>
@@ -159,16 +105,25 @@ export function SecurityOverview() {
           </p>
         </div>
 
-        {/* Right Action Bar */}
         <div className="flex items-center gap-3 flex-wrap">
           <div className="flex items-center gap-2 text-xs text-[#756B67] bg-[#141211] px-3 py-1.5 rounded-md border border-[#302A28] font-mono">
             <RefreshCw className="h-3 w-3 text-[#756B67]" />
-            <span>Updated: {formatTimestamp(summary.environment.lastUpdated)} UTC</span>
+            <span>Updated: {formatTimestamp(view.lastUpdated)} UTC</span>
           </div>
 
+          {running && (
+            <button
+              onClick={reset}
+              className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-md bg-[#1D1A19] hover:bg-[#221E1D] text-[#D0C4C0] border border-[#302A28] text-xs font-semibold cursor-pointer"
+            >
+              <RotateCcw className="h-3.5 w-3.5" />
+              <span>Reset</span>
+            </button>
+          )}
           <button
-            onClick={handleSimulateAttack}
-            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-md bg-[#A20903] hover:bg-[#850702] text-[#F3EEEC] text-xs font-semibold shadow-md transition-all duration-150 active:scale-95 cursor-pointer"
+            onClick={() => setShowSimulateModal(true)}
+            disabled={running}
+            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-md bg-[#A20903] hover:bg-[#850702] disabled:opacity-40 disabled:cursor-not-allowed text-[#F3EEEC] text-xs font-semibold shadow-md transition-all duration-150 active:scale-95 cursor-pointer"
           >
             <Play className="h-3.5 w-3.5 fill-current" />
             <span>Simulate Attack (Demo)</span>
@@ -178,40 +133,75 @@ export function SecurityOverview() {
 
       {/* 5 KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
-        <MetricCard data={summary.kpis.activeIncidents} />
-        <MetricCard data={summary.kpis.criticalThreats} />
-        <MetricCard data={summary.kpis.suspiciousApiRequests} />
-        <MetricCard data={summary.kpis.affectedRecords} />
-        <MetricCard data={summary.kpis.pendingApprovals} />
+        <MetricCard data={view.kpis.activeIncidents} />
+        <MetricCard data={view.kpis.criticalThreats} />
+        <MetricCard data={view.kpis.suspiciousApiRequests} />
+        <MetricCard data={view.kpis.affectedRecords} />
+        <MetricCard data={view.kpis.pendingApprovals} />
       </div>
 
-      {/* Row 2: Threat Activity Chart (2/3) & Threat Severity Distribution (1/3) */}
+      {/* Defender Agent live log */}
+      {running && sc && (
+        <Card>
+          <CardHeader>
+            <CardTitle>
+              <Bot className="h-4 w-4 text-[#A2847B]" />
+              <span>Defender Agent - Live Log</span>
+            </CardTitle>
+            <p className="text-xs text-[#A79B96] mt-1">{sc.name}: scripted client-side simulation. AI steps are SIMULATED/MOCK; no real systems are touched.</p>
+          </CardHeader>
+          <CardContent className="p-0">
+            <div className="max-h-52 overflow-y-auto divide-y divide-[#302A28] font-mono text-[11px]">
+              {view.logs.length === 0 && <div className="px-4 py-3 text-[#756B67]">Monitoring telemetry... no detections yet.</div>}
+              {[...view.logs].reverse().map((l, i) => (
+                <div key={`${l.t}-${l.stage}-${i}`} className="px-4 py-2 flex gap-3 items-start sim-slide-in">
+                  <span className="text-[#756B67] shrink-0">T+{l.t}s</span>
+                  <span className={`shrink-0 w-32 font-bold ${STAGE_COLOR[l.stage] ?? 'text-[#D0C4C0]'}`}>{l.stage}</span>
+                  <span className="text-[#D0C4C0] font-sans">{l.text}</span>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Row 2 */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
         <div className="lg:col-span-2">
-          <ThreatActivity data={data.threatActivity} />
+          <ThreatActivity data={view.chart} />
         </div>
         <div className="lg:col-span-1">
-          <ThreatDistribution distribution={data.severityDistribution} />
+          <ThreatDistribution distribution={view.distribution} />
         </div>
       </div>
 
-      {/* Row 3: Active Incidents (P0 / Correlated cases) */}
       <div>
-        <ActiveIncidents incidents={summary.activeIncidents} />
+        <ActiveIncidents incidents={view.incidents} />
       </div>
 
-      {/* Row 4: Recent Security Events Table */}
       <div>
-        <RecentEvents events={summary.recentEvents} />
+        <RecentEvents events={view.events} />
       </div>
 
-      {/* Row 5: Recent Response Activity & Integration Health */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-        <ResponseActivity activities={data.recentActivity} />
+        <ResponseActivity activities={view.responses} />
         <IntegrationStatus integrations={summary.integrations} />
       </div>
 
-      {/* Simulate Attack Modal */}
+      {/* Toasts (derived: events from the last 4s) */}
+      <div className="fixed bottom-4 right-4 z-40 space-y-2 w-80 pointer-events-none" aria-live="polite">
+        {view.toasts.slice(-4).map((x) => (
+          <div key={x.event.id} className="sim-toast bg-[#141211] border border-[#A20903]/60 rounded-lg p-3 shadow-2xl">
+            <div className="flex items-center justify-between gap-2">
+              <span className="text-[11px] font-bold text-[#FCA5A5] uppercase">{x.event.severity} - {x.event.eventType.replace(/_/g, ' ')}</span>
+              <span className="text-[10px] font-mono text-[#756B67]">{x.event.responseStatus}</span>
+            </div>
+            <p className="text-[11px] text-[#D0C4C0] mt-1 leading-snug">{x.event.description}</p>
+          </div>
+        ))}
+      </div>
+
+      {/* Scenario picker */}
       {showSimulateModal && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-[#141211] border border-[#302A28] rounded-xl max-w-lg w-full p-6 shadow-2xl space-y-4">
@@ -221,18 +211,11 @@ export function SecurityOverview() {
                   <Play className="h-5 w-5 fill-current" />
                 </div>
                 <div>
-                  <h3 className="text-base font-bold text-[#F3EEEC]">
-                    Simulate Attack Scenario
-                  </h3>
-                  <p className="text-xs text-[#A79B96]">
-                    Synthetic attack replay for SOC verification and demonstration
-                  </p>
+                  <h3 className="text-base font-bold text-[#F3EEEC]">Simulate Live Attack</h3>
+                  <p className="text-xs text-[#A79B96]">~45s scripted run, entirely in your browser</p>
                 </div>
               </div>
-              <button
-                onClick={() => setShowSimulateModal(false)}
-                className="text-[#756B67] hover:text-[#F3EEEC] p-1 rounded"
-              >
+              <button onClick={() => setShowSimulateModal(false)} className="text-[#756B67] hover:text-[#F3EEEC] p-1 rounded" aria-label="Close">
                 <X className="h-4 w-4" />
               </button>
             </div>
@@ -240,82 +223,85 @@ export function SecurityOverview() {
             <div className="p-3 bg-[#1D1A19] border border-[#302A28] rounded-lg text-xs text-[#D0C4C0] flex items-start gap-2">
               <AlertCircle className="h-4 w-4 shrink-0 mt-0.5 text-[#D97706]" />
               <span>
-                <strong className="text-[#F3EEEC]">Demo Safe Replay:</strong> This control will simulate high-fidelity synthetic telemetry in the local SOC without performing any real network or infrastructure attacks.
+                <strong className="text-[#F3EEEC]">Demo safe:</strong> synthetic telemetry only. No network calls, no real attacks, AI steps are simulated.
               </span>
             </div>
 
             <div className="space-y-2">
-              <p className="text-xs font-semibold text-[#A79B96] uppercase tracking-wider">
-                Select Scenario Replay:
-              </p>
-
-              <button
-                onClick={() =>
-                  handleTriggerReplay('Account Takeover + High-Volume Order API Scraping')
-                }
-                className="w-full text-left p-3 rounded-lg bg-[#1D1A19] hover:bg-[#221E1D] border border-[#A20903]/40 transition-all group"
-              >
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-[#FCA5A5] group-hover:text-white">
-                    Primary P0: Account Takeover &amp; Order History Exfiltration
-                  </span>
-                  <Badge variant="critical" size="sm">P0 Demo</Badge>
-                </div>
-                <p className="text-[11px] text-[#A79B96] mt-1">
-                  7 credential stuffing attempts &rarr; login from RO &rarr; shipping address change &rarr; 420 order pagination calls dumping 4,520 records.
-                </p>
-              </button>
-
-              <button
-                onClick={() =>
-                  handleTriggerReplay('Carding Velocity Attack on Checkout')
-                }
-                className="w-full text-left p-3 rounded-lg bg-[#1D1A19] hover:bg-[#221E1D] border border-[#C2410C]/40 transition-all group"
-              >
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-[#FDBA74] group-hover:text-white">
-                    Scenario 2: Distributed Carding Attack &amp; Velocity Spike
-                  </span>
-                  <Badge variant="high" size="sm">PCI Scope</Badge>
-                </div>
-                <p className="text-[11px] text-[#A79B96] mt-1">
-                  16 rapid card authorization declines with rotating BIN prefixes from proxy exit nodes.
-                </p>
-              </button>
-
-              <button
-                onClick={() =>
-                  handleTriggerReplay('Third-Party Seller API Scope Violation')
-                }
-                className="w-full text-left p-3 rounded-lg bg-[#1D1A19] hover:bg-[#221E1D] border border-[#302A28] transition-all group"
-              >
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-[#D0C4C0] group-hover:text-white">
-                    Scenario 3: Partner API Token Scope Abuse
-                  </span>
-                  <Badge variant="neutral" size="sm">Vendor Sec</Badge>
-                </div>
-                <p className="text-[11px] text-[#A79B96] mt-1">
-                  Expired merchant token attempting cross-tenant pricing overrides with 88 repeated 403 responses.
-                </p>
-              </button>
+              {SCENARIOS.map((s) => (
+                <button
+                  key={s.id}
+                  onClick={() => setPick(s.id)}
+                  className={`w-full text-left p-3 rounded-lg bg-[#1D1A19] hover:bg-[#221E1D] border transition-all ${pick === s.id ? 'border-[#A20903]' : 'border-[#302A28]'}`}
+                >
+                  <span className="text-xs font-bold text-[#F3EEEC]">{s.name}</span>
+                  <p className="text-[11px] text-[#A79B96] mt-1">{s.blurb}</p>
+                </button>
+              ))}
             </div>
 
             <div className="flex items-center justify-between pt-2 border-t border-[#302A28]">
-              <Link
-                href="/threats/live"
-                onClick={() => setShowSimulateModal(false)}
-                className="px-3.5 py-2 bg-[#A20903] hover:bg-[#850702] text-[#F3EEEC] text-xs font-semibold rounded-lg flex items-center gap-1.5 transition-colors shadow-sm"
-              >
-                <span>Launch Live Feed Demo</span>
+              <Link href="/threats/live" onClick={() => setShowSimulateModal(false)} className="text-xs text-[#A79B96] hover:text-[#F3EEEC] flex items-center gap-1">
+                <span>Live feed</span>
                 <ArrowRight className="h-3.5 w-3.5" />
               </Link>
+              <div className="flex gap-2">
+                <button onClick={() => setShowSimulateModal(false)} className="px-4 py-2 bg-[#1D1A19] hover:bg-[#221E1D] text-[#A79B96] text-xs font-medium rounded-lg border border-[#302A28]">
+                  Cancel
+                </button>
+                <button
+                  onClick={() => {
+                    setShowSimulateModal(false);
+                    start(pick);
+                  }}
+                  className="px-4 py-2 bg-[#A20903] hover:bg-[#850702] text-[#F3EEEC] text-xs font-semibold rounded-lg flex items-center gap-1.5"
+                >
+                  <Play className="h-3.5 w-3.5 fill-current" />
+                  <span>Start</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
-              <button
-                onClick={() => setShowSimulateModal(false)}
-                className="px-4 py-2 bg-[#1D1A19] hover:bg-[#221E1D] text-[#A79B96] text-xs font-medium rounded-lg border border-[#302A28]"
-              >
-                Close
+      {/* BLOCKING approval modal: no backdrop/ESC close; run is paused until chosen */}
+      {state.phase === 'awaiting' && sc && (
+        <div className="fixed inset-0 bg-black/85 backdrop-blur-sm z-[60] flex items-center justify-center p-4">
+          <div role="alertdialog" aria-modal="true" aria-labelledby="approval-title" className="bg-[#141211] border-2 border-[#D97706] rounded-xl max-w-lg w-full p-6 shadow-2xl space-y-4">
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <p className="text-[11px] font-bold text-[#FDE047] uppercase tracking-wider">Human approval required - attack paused</p>
+                <h3 id="approval-title" className="text-lg font-bold text-[#F3EEEC] mt-1">{sc.action.label}</h3>
+              </div>
+              <div className="text-center shrink-0">
+                <div className="text-3xl font-extrabold font-mono text-[#FDE047]">{state.countdown}</div>
+                <div className="text-[10px] text-[#756B67] uppercase">of {APPROVAL_SECONDS}s</div>
+              </div>
+            </div>
+
+            <div className="space-y-3 text-xs">
+              <div className="p-3 bg-[#1D1A19] border border-[#302A28] rounded-lg">
+                <p className="font-semibold text-[#A79B96] uppercase text-[10px] tracking-wider mb-1">What it affects</p>
+                <p className="text-[#D0C4C0]">{sc.action.affects}</p>
+              </div>
+              <div className="p-3 bg-[#5C1811]/20 border border-[#A20903]/40 rounded-lg">
+                <p className="font-semibold text-[#FCA5A5] uppercase text-[10px] tracking-wider mb-1">Risk if skipped</p>
+                <p className="text-[#D0C4C0]">{sc.action.riskIfSkipped}</p>
+              </div>
+              <p className="text-[11px] text-[#756B67]">
+                If the window expires, <strong className="text-[#F3EEEC]">nothing is executed</strong> and the attack continues. Containment here is mocked (simulated).
+              </p>
+            </div>
+
+            <div className="flex gap-3 pt-2">
+              <button onClick={() => decide('approved')} autoFocus className="flex-1 px-4 py-2.5 bg-[#166534] hover:bg-[#15803D] text-white text-sm font-bold rounded-lg flex items-center justify-center gap-2">
+                <Check className="h-4 w-4" />
+                Approve
+              </button>
+              <button onClick={() => decide('rejected')} className="flex-1 px-4 py-2.5 bg-[#1D1A19] hover:bg-[#221E1D] text-[#FCA5A5] text-sm font-bold rounded-lg border border-[#A20903]/60 flex items-center justify-center gap-2">
+                <Ban className="h-4 w-4" />
+                Reject
               </button>
             </div>
           </div>

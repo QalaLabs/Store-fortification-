@@ -54,7 +54,7 @@ export function RecentEvents({ events }: RecentEventsProps) {
                 return (
                   <tr
                     key={evt.id}
-                    className="hover:bg-[#1D1A19] transition-colors group cursor-default"
+                    className={`hover:bg-[#1D1A19] transition-colors group cursor-default${evt.id.startsWith('sim-') ? ' sim-slide-in' : ''}`}
                   >
                     <td className="py-2.5 px-4 text-[#756B67] font-mono whitespace-nowrap">
                       {formatTimestamp(evt.timestamp)}

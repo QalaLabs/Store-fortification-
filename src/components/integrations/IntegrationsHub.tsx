@@ -74,7 +74,7 @@ export function IntegrationsHub() {
             Truthful Provider Status Guarantee (QALA LABS Standard)
           </strong>
           <p className="text-[#A79B96] leading-relaxed text-[11px]">
-            In accordance with project rules, CARTGUARD AI never falsely claims external AWS services are live when credentials are pending. Providers are clearly categorized as <strong className="text-[#F3EEEC]">SIMULATED</strong> or <strong className="text-[#F3EEEC]">CONNECTED (UNTESTED)</strong> until live verification tokens are confirmed.
+            In accordance with project rules, CARTGUARD AI never falsely claims external AWS services are live when credentials are pending. Providers are clearly categorized as <strong className="text-[#F3EEEC]">SIMULATED</strong> or <strong className="text-[#F3EEEC]">CONFIGURED (UNTESTED)</strong> until live verification tokens are confirmed.
           </p>
         </div>
       </div>

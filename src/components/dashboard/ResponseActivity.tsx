@@ -33,11 +33,11 @@ export function ResponseActivity({ activities }: ResponseActivityProps) {
                   {act.action}
                 </span>
                 <Badge
-                  variant={isPending ? 'warning' : 'success'}
+                  variant={isPending ? 'warning' : act.status === 'reverted' ? 'neutral' : 'success'}
                   size="sm"
                   pulse={isPending}
                 >
-                  {isPending ? 'APPROVAL REQUIRED' : 'EXECUTED (MOCK)'}
+                  {isPending ? 'APPROVAL REQUIRED' : act.status === 'reverted' ? 'REJECTED' : 'EXECUTED (MOCK)'}
                 </Badge>
               </div>
 

@@ -113,7 +113,7 @@ export function ThreatActivity({ data }: ThreatActivityProps) {
           <div className="flex items-center gap-2">
             <span className="h-2 w-2 rounded-full bg-[#A20903] animate-pulse" />
             <span className="text-[#D0C4C0] font-medium text-[11px]">
-              Critical Anomaly Spike detected at 12:30 (420 API burst + 85 data access events)
+              Critical Anomaly Spike detected at 12:25 (420 API burst + 85 data access events)
             </span>
           </div>
           <span className="text-[#FCA5A5] font-mono text-[11px] font-semibold">RULE: P0-STUFFING-BURST</span>

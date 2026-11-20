@@ -37,13 +37,13 @@ const pendingApprovalsCount = syntheticIncidents.filter(
 ).length;
 
 export const threatActivityData: ThreatActivityDataPoint[] = [
-  { time: '11:00', authAnomalies: 2, apiSpikes: 5, dataAccessAnomalies: 1, paymentAnomalies: 0 },
-  { time: '11:15', authAnomalies: 4, apiSpikes: 12, dataAccessAnomalies: 2, paymentAnomalies: 1 },
-  { time: '11:30', authAnomalies: 3, apiSpikes: 18, dataAccessAnomalies: 0, paymentAnomalies: 3 },
-  { time: '11:45', authAnomalies: 6, apiSpikes: 24, dataAccessAnomalies: 3, paymentAnomalies: 14 },
-  { time: '12:00', authAnomalies: 5, apiSpikes: 42, dataAccessAnomalies: 4, paymentAnomalies: 8 },
-  { time: '12:15', authAnomalies: 28, apiSpikes: 190, dataAccessAnomalies: 38, paymentAnomalies: 16 },
-  { time: '12:30', authAnomalies: 12, apiSpikes: 420, dataAccessAnomalies: 85, paymentAnomalies: 12 },
+  { time: '10:55', authAnomalies: 2, apiSpikes: 5, dataAccessAnomalies: 1, paymentAnomalies: 0 },
+  { time: '11:10', authAnomalies: 4, apiSpikes: 12, dataAccessAnomalies: 2, paymentAnomalies: 1 },
+  { time: '11:25', authAnomalies: 3, apiSpikes: 18, dataAccessAnomalies: 0, paymentAnomalies: 3 },
+  { time: '11:40', authAnomalies: 6, apiSpikes: 24, dataAccessAnomalies: 3, paymentAnomalies: 14 },
+  { time: '11:55', authAnomalies: 5, apiSpikes: 42, dataAccessAnomalies: 4, paymentAnomalies: 8 },
+  { time: '12:10', authAnomalies: 28, apiSpikes: 190, dataAccessAnomalies: 38, paymentAnomalies: 16 },
+  { time: '12:25', authAnomalies: 12, apiSpikes: 420, dataAccessAnomalies: 85, paymentAnomalies: 12 },
 ];
 
 export const severityDistribution: SeverityDistributionItem[] = [
@@ -60,9 +60,9 @@ export const recentResponseActivities: RecentResponseActivity[] = [
     action: 'Freeze Third-Party API Key',
     target: 'api-key-seller-88390 (Vertex Global)',
     actor: 'CARTGUARD Policy Guard',
-    status: 'simulated_success',
+    status: 'pending_approval',
     incidentId: 'INC-2026-0834',
-    details: 'Isolated vendor API key following cross-tenant catalogue mutation attempt.',
+    details: 'Proposed: isolate vendor API key following cross-tenant catalogue mutation attempt. Awaiting analyst approval.',
   },
   {
     id: 'resp-002',

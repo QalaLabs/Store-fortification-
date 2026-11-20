@@ -34,3 +34,22 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: #4D4440;
 }
+
+/* Live attack simulation animations (DEMO) */
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes sim-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(162, 9, 3, 0.55); }
+    50% { box-shadow: 0 0 0 8px rgba(162, 9, 3, 0); }
+  }
+  @keyframes sim-slide-in {
+    from { opacity: 0; transform: translateY(-14px); background-color: rgba(162, 9, 3, 0.25); }
+    to { opacity: 1; transform: translateY(0); background-color: transparent; }
+  }
+  @keyframes sim-toast {
+    from { opacity: 0; transform: translateX(24px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  .sim-pulse { animation: sim-pulse 1.4s ease-in-out infinite; }
+  .sim-slide-in { animation: sim-slide-in 0.6s ease-out; }
+  .sim-toast { animation: sim-toast 0.3s ease-out; }
+}

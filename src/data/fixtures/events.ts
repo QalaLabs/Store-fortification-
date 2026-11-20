@@ -25,7 +25,7 @@ export const syntheticSecurityEvents: SecurityEvent[] = [
     responseStatus: 401,
     requestCount: 7,
     resourceType: 'customer_account',
-    recordCount: 1,
+    recordCount: 0,
     dataCategory: 'AUTHENTICATION',
     description: 'Consecutive failed login attempts with invalid credential hash',
     metadata: {
@@ -147,7 +147,7 @@ export const syntheticSecurityEvents: SecurityEvent[] = [
     responseStatus: 403,
     requestCount: 88,
     resourceType: 'seller_api_key',
-    recordCount: 650,
+    recordCount: 0,
     dataCategory: 'SELLER_CREDENTIALS',
     description: 'Expired API key attempting unauthorized price and inventory override across cross-tenant listings',
     metadata: {
@@ -171,7 +171,7 @@ export const syntheticSecurityEvents: SecurityEvent[] = [
     responseStatus: 402,
     requestCount: 16,
     resourceType: 'payment_gateway',
-    recordCount: 1,
+    recordCount: 0,
     dataCategory: 'PCI_FINANCIAL',
     description: 'Rapid card velocity with rotating BIN prefixes from proxy exit node',
     metadata: {
