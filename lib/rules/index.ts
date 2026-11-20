@@ -4,4 +4,7 @@ export * from "./r2-success-after-failures";
 export * from "./r3-api-volume";
 export * from "./r4-sensitive-access";
 export * from "./r5-unapproved-export";
+export * from "./r6-partner-scope";
+export * from "./r7-consent-drift";
+export * from "./r8-agent-payment";
 export * from "./detection-engine";

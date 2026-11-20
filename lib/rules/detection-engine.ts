@@ -5,6 +5,9 @@ import { RuleR2SuccessAfterFailures } from "./r2-success-after-failures";
 import { RuleR3ApiVolumeAndBotLikelihood } from "./r3-api-volume";
 import { RuleR4SensitiveAccess } from "./r4-sensitive-access";
 import { RuleR5UnapprovedExport } from "./r5-unapproved-export";
+import { RuleR6PartnerScope } from "./r6-partner-scope";
+import { RuleR7ConsentDrift } from "./r7-consent-drift";
+import { RuleR8AgentPayment } from "./r8-agent-payment";
 
 export class DetectionEngine {
   private rules: Map<string, SecurityRule> = new Map();
@@ -15,6 +18,9 @@ export class DetectionEngine {
     this.registerRule(new RuleR3ApiVolumeAndBotLikelihood());
     this.registerRule(new RuleR4SensitiveAccess());
     this.registerRule(new RuleR5UnapprovedExport());
+    this.registerRule(new RuleR6PartnerScope());
+    this.registerRule(new RuleR7ConsentDrift());
+    this.registerRule(new RuleR8AgentPayment());
   }
 
   registerRule(rule: SecurityRule): void {
