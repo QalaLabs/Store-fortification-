@@ -28,10 +28,10 @@ const BANNED_WORDING: ReadonlyArray<readonly [RegExp, string]> = [
 /** Wording that would present a proposal as skipping human approval. */
 const UNSAFE_ACTION = new RegExp(
   [
-    "\bauto[- ]?approve",
-    "\bwithout (analyst|human) (approval|review)",
-    "\bbypass(es|ing)? (the )?(analyst |human )?approval",
-    "\bexecute[ds]? (it |this )?(automatically|immediately|now)",
+    "\\bauto[- ]?approve",
+    "\\bwithout (analyst|human) (approval|review)",
+    "\\bbypass(es|ing)? (the )?(analyst |human )?approval",
+    "\\bexecute[ds]? (it |this )?(automatically|immediately|now)",
   ].join("|"),
   "i",
 );

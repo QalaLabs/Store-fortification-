@@ -16,7 +16,7 @@ Rules:
 
 /** JSON with every "<" escaped so a recorded value cannot close the delimiting tags. */
 function safeJson(value: unknown): string {
-  return JSON.stringify(value, null, 2).split("<").join("\u003c");
+  return JSON.stringify(value, null, 2).split("<").join("\\u003c");
 }
 
 export function buildUserPrompt(incident: Incident, events: SecurityEvent[]): string {
