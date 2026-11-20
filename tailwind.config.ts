@@ -1,54 +1,65 @@
-import type { Config } from "tailwindcss";
+import type { Config } from 'tailwindcss';
 
 const config: Config = {
-  darkMode: ["class"],
   content: [
-    "./pages/**/*.{js,ts,jsx,tsx,mdx}",
-    "./components/**/*.{js,ts,jsx,tsx,mdx}",
-    "./app/**/*.{js,ts,jsx,tsx,mdx}",
-    "./lib/**/*.{js,ts,jsx,tsx,mdx}",
+    './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/components/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
-        card: {
-          DEFAULT: "hsl(var(--card))",
-          foreground: "hsl(var(--card-foreground))",
+        // CyFocus Theme System
+        cyfocus: {
+          bg: '#070505',
+          sidebar: '#100E0D',
+          surface: '#141211',
+          elevated: '#1D1A19',
+          'card-hover': '#221E1D',
+          border: '#302A28',
+          'border-light': '#3D3633',
+          'border-highlight': '#4D4440',
+          'text-primary': '#F3EEEC',
+          'text-secondary': '#A79B96',
+          'text-muted': '#756B67',
+          'red-critical': '#A20903',
+          'red-deep': '#5C1811',
+          'green-forest': '#26502B',
+          'warm-neutral': '#D0C4C0',
+          'muted-rose': '#A2847B',
         },
-        popover: {
-          DEFAULT: "hsl(var(--popover))",
-          foreground: "hsl(var(--popover-foreground))",
+        soc: {
+          bg: '#070505',
+          card: '#141211',
+          'card-hover': '#201B1A',
+          elevated: '#1D1A19',
+          border: '#302A28',
+          'border-light': '#3D3633',
+          text: '#F3EEEC',
+          muted: '#A79B96',
+          subtle: '#756B67',
         },
-        primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
+        severity: {
+          critical: '#A20903',
+          'critical-bg': 'rgba(162, 9, 3, 0.16)',
+          'critical-border': 'rgba(162, 9, 3, 0.45)',
+          high: '#C2410C',
+          'high-bg': 'rgba(194, 65, 12, 0.16)',
+          'high-border': 'rgba(194, 65, 12, 0.45)',
+          medium: '#D97706',
+          'medium-bg': 'rgba(217, 119, 6, 0.16)',
+          'medium-border': 'rgba(217, 119, 6, 0.45)',
+          low: '#8A7E79',
+          'low-bg': 'rgba(138, 126, 121, 0.16)',
+          'low-border': 'rgba(138, 126, 121, 0.35)',
+          info: '#A2847B',
+          'info-bg': 'rgba(162, 132, 123, 0.16)',
+          'info-border': 'rgba(162, 132, 123, 0.35)',
+          success: '#26502B',
+          'success-bg': 'rgba(38, 80, 43, 0.22)',
+          'success-border': 'rgba(38, 80, 43, 0.5)',
         },
-        secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
-        },
-        muted: {
-          DEFAULT: "hsl(var(--muted))",
-          foreground: "hsl(var(--muted-foreground))",
-        },
-        accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
-        },
-        destructive: {
-          DEFAULT: "hsl(var(--destructive))",
-          foreground: "hsl(var(--destructive-foreground))",
-        },
-        border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
-      },
-      borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
       },
     },
   },

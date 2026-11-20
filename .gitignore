@@ -39,3 +39,10 @@ data/*.json
 .vscode/
 *.swp
 *.swo
+
+# From the frontend branch (Aayash)
+/.pnp
+.pnp.js
+.env*.local
+preview.html
+Store-fortification-/

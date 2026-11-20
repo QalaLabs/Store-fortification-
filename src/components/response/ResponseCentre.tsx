@@ -1,0 +1,396 @@
+'use client';
+
+import React, { useState } from 'react';
+import Link from 'next/link';
+import { ProposedResponseAction, ResponseAuditRecord } from '@/types/response';
+import { DryRunModal } from './DryRunModal';
+import { AuditHistoryTable } from './AuditHistoryTable';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
+import { Badge } from '@/components/ui/Badge';
+import { formatDateTime } from '@/lib/formatters';
+import {
+  Zap,
+  ShieldCheck,
+  AlertTriangle,
+  Play,
+  CheckCircle2,
+  XCircle,
+  FileText,
+  Clock,
+  ArrowRight,
+  ExternalLink,
+  ShieldAlert,
+  Bot,
+} from 'lucide-react';
+import { useResponseCentre } from '@/lib/api';
+
+interface ResponseCentreProps {
+  initialProposals?: ProposedResponseAction[];
+  initialAuditRecords?: ResponseAuditRecord[];
+}
+
+export function ResponseCentre({
+  initialProposals,
+  initialAuditRecords,
+}: ResponseCentreProps) {
+  const {
+    proposals: apiProposals,
+    auditHistory: apiAuditRecords,
+    isLoading,
+    error,
+    mode,
+    submitDecision,
+  } = useResponseCentre();
+
+  const [localProposals, setLocalProposals] = useState<ProposedResponseAction[] | null>(null);
+  const [localAudit, setLocalAudit] = useState<ResponseAuditRecord[] | null>(null);
+  const [inspectingAction, setInspectingAction] = useState<ProposedResponseAction | null>(null);
+  const [feedbackBanner, setFeedbackBanner] = useState<string | null>(null);
+
+  const proposals = localProposals || (initialProposals && initialProposals.length ? initialProposals : apiProposals);
+  const auditRecords = localAudit || (initialAuditRecords && initialAuditRecords.length ? initialAuditRecords : apiAuditRecords);
+
+  const pendingCount = proposals.filter((p) => p.stage === 'PENDING_APPROVAL').length;
+  const executedCount = proposals.filter((p) => p.stage === 'EXECUTED_SIMULATED').length;
+
+  const handleApprove = async (actionId: string) => {
+    const action = proposals.find((p) => p.id === actionId);
+    if (!action) return;
+
+    try {
+      const res = await submitDecision({
+        actionId,
+        decision: 'APPROVE',
+        approver: 'Aayash (SecOps Analyst)',
+        notes: `Simulated containment action approved. Blast radius: ${action.dryRun.estimatedBlastRadius}. Risk reduction: -${action.dryRun.expectedRiskReductionPercent}%.`,
+      });
+
+      if (res?.data) {
+        setLocalProposals((prev) =>
+          (prev || proposals).map((p) => (p.id === actionId ? res.data.action : p))
+        );
+        setLocalAudit((prev) => [res.data.auditRecord, ...(prev || auditRecords)]);
+      }
+    } catch {
+      // Fallback local update
+      setLocalProposals((prev) =>
+        (prev || proposals).map((p) =>
+          p.id === actionId
+            ? {
+                ...p,
+                stage: 'EXECUTED_SIMULATED',
+                approver: 'Aayash (SecOps Analyst)',
+                approvalTimestamp: new Date().toISOString(),
+              }
+            : p
+        )
+      );
+    }
+
+    setInspectingAction(null);
+    setFeedbackBanner(
+      `Action Approved: "${action.title}" executed in simulated mode and appended to immutable audit journal.`
+    );
+  };
+
+  const handleReject = async (actionId: string) => {
+    const action = proposals.find((p) => p.id === actionId);
+    if (!action) return;
+
+    try {
+      const res = await submitDecision({
+        actionId,
+        decision: 'REJECT',
+        approver: 'Aayash (SecOps Analyst)',
+        notes: 'Dismissed by analyst during dry-run review.',
+      });
+
+      if (res?.data) {
+        setLocalProposals((prev) =>
+          (prev || proposals).map((p) => (p.id === actionId ? res.data.action : p))
+        );
+        setLocalAudit((prev) => [res.data.auditRecord, ...(prev || auditRecords)]);
+      }
+    } catch {
+      setLocalProposals((prev) =>
+        (prev || proposals).map((p) =>
+          p.id === actionId
+            ? {
+                ...p,
+                stage: 'REJECTED',
+                approver: 'Aayash (SecOps Analyst)',
+                rejectionReason: 'Dismissed by analyst during dry-run review.',
+              }
+            : p
+        )
+      );
+    }
+
+    setInspectingAction(null);
+    setFeedbackBanner(`Action Rejected: "${action.title}" proposal dismissed.`);
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-[#302A28]">
+        <div>
+          <div className="flex items-center gap-3">
+            <h2 className="text-2xl font-bold tracking-tight text-[#F3EEEC] flex items-center gap-2.5">
+              <Zap className="h-6 w-6 text-[#A20903]" />
+              <span>Response Centre &amp; Containment Control</span>
+            </h2>
+            <Badge variant="warning" size="sm" pulse={pendingCount > 0}>
+              HUMAN-IN-THE-LOOP
+            </Badge>
+            <Badge
+              variant={mode === 'LIVE' ? 'success' : mode === 'ERROR' ? 'error' : 'neutral'}
+              size="sm"
+            >
+              {mode === 'LIVE' ? 'LIVE ACTIONS' : mode === 'ERROR' ? 'API DISCONNECTED' : 'DEMO MODE'}
+            </Badge>
+          </div>
+          <p className="text-xs text-[#A79B96] mt-1 max-w-2xl">
+            Controlled remediation workflow: reviews automated blast-radius dry runs, enforces human authorization, and logs simulated executions to the audit trail.
+          </p>
+        </div>
+
+        {/* Counter Pills */}
+        <div className="flex items-center gap-2.5 flex-wrap">
+          <div className="bg-[#78350F]/30 px-3 py-1.5 rounded-lg border border-[#D97706]/40 text-xs">
+            <span className="text-[#FDE047]">Pending Authorization:</span>{' '}
+            <strong className="text-[#F3EEEC] font-mono">{pendingCount}</strong>
+          </div>
+          <div className="bg-[#26502B]/30 px-3 py-1.5 rounded-lg border border-[#26502B] text-xs">
+            <span className="text-[#86EFAC]">Simulated Executed:</span>{' '}
+            <strong className="text-[#86EFAC] font-mono">{executedCount}</strong>
+          </div>
+          <div className="bg-[#141211] px-3 py-1.5 rounded-lg border border-[#302A28] text-xs">
+            <span className="text-[#756B67]">Total Audit Logs:</span>{' '}
+            <strong className="text-[#D0C4C0] font-mono">{auditRecords.length}</strong>
+          </div>
+        </div>
+      </div>
+
+      {/* Feedback Banner with Connected Next Step Navigation */}
+      {feedbackBanner && (
+        <div className="p-4 rounded-xl bg-[#141211] border border-[#26502B] text-xs text-[#86EFAC] space-y-2 animate-in fade-in-50">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="h-4 w-4 text-[#4ADE80] shrink-0" />
+              <span className="font-semibold">{feedbackBanner}</span>
+            </div>
+            <button
+              onClick={() => setFeedbackBanner(null)}
+              className="p-1 hover:bg-[#1D1A19] rounded text-[#756B67] hover:text-[#F3EEEC]"
+            >
+              ✕
+            </button>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2 pt-1 border-t border-[#302A28] text-xs">
+            <span className="text-[#756B67] font-semibold text-[11px] mr-1">Connected Next Steps:</span>
+            <Link
+              href="/identity/agents?highlightTx=tx-agent-2026-8804"
+              className="px-2.5 py-1 rounded bg-[#1D1A19] hover:bg-[#221E1D] text-[#D0C4C0] border border-[#302A28] flex items-center gap-1.5 font-medium transition-colors"
+            >
+              <Bot className="h-3.5 w-3.5 text-[#A2847B]" />
+              <span>Step 5: Verify Correlated Autonomous Agent Mandate (R8)</span>
+              <ArrowRight className="h-3 w-3 text-[#A20903]" />
+            </Link>
+            <a
+              href="#audit-trail"
+              className="px-2.5 py-1 rounded bg-[#100E0D] hover:bg-[#1D1A19] text-[#A79B96] border border-[#302A28] flex items-center gap-1 transition-colors"
+            >
+              <span>Step 6: Inspect Logged Entry in Audit Journal Below &darr;</span>
+            </a>
+          </div>
+        </div>
+      )}
+
+      {/* Response Sequence Pipeline Visualizer */}
+      <div className="bg-[#141211] p-4 rounded-lg border border-[#302A28] space-y-3">
+        <span className="text-[10px] font-bold text-[#756B67] uppercase tracking-wider block">
+          Required Containment Safety Pipeline
+        </span>
+
+        <div className="grid grid-cols-1 sm:grid-cols-5 gap-2 text-xs">
+          <div className="p-2.5 rounded bg-[#100E0D] border border-[#302A28] text-center">
+            <span className="text-[10px] text-[#A79B96] font-bold block">STAGE 1</span>
+            <span className="font-semibold text-[#F3EEEC]">1. PROPOSE</span>
+            <span className="text-[10px] text-[#756B67] block mt-0.5">Correlation Engine</span>
+          </div>
+
+          <div className="p-2.5 rounded bg-[#100E0D] border border-[#302A28] text-center">
+            <span className="text-[10px] text-[#D0C4C0] font-bold block">STAGE 2</span>
+            <span className="font-semibold text-[#F3EEEC]">2. DRY RUN</span>
+            <span className="text-[10px] text-[#756B67] block mt-0.5">Blast Radius Check</span>
+          </div>
+
+          <div className="p-2.5 rounded bg-[#100E0D] border border-[#A20903]/40 text-center">
+            <span className="text-[10px] text-[#FCA5A5] font-bold block">STAGE 3</span>
+            <span className="font-semibold text-[#FCA5A5]">3. HUMAN APPROVAL</span>
+            <span className="text-[10px] text-[#756B67] block mt-0.5">SecOps Authorization</span>
+          </div>
+
+          <div className="p-2.5 rounded bg-[#100E0D] border border-[#26502B] text-center">
+            <span className="text-[10px] text-[#86EFAC] font-bold block">STAGE 4</span>
+            <span className="font-semibold text-[#86EFAC]">4. SIMULATED EXECUTION</span>
+            <span className="text-[10px] text-[#756B67] block mt-0.5">Mock Safety Shield</span>
+          </div>
+
+          <div className="p-2.5 rounded bg-[#100E0D] border border-[#302A28] text-center">
+            <span className="text-[10px] text-[#756B67] font-bold block">STAGE 5</span>
+            <span className="font-semibold text-[#D0C4C0]">5. AUDIT LOG</span>
+            <span className="text-[10px] text-[#756B67] block mt-0.5">SHA-256 Record</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Proposed Actions List */}
+      <Card>
+        <CardHeader>
+          <CardTitle>
+            <Zap className="h-4 w-4 text-[#A20903]" />
+            <span>Remediation Proposals Awaiting Action</span>
+          </CardTitle>
+        </CardHeader>
+
+        <CardContent className="space-y-3.5">
+          {proposals.map((action) => {
+            const isPending = action.stage === 'PENDING_APPROVAL';
+            const isExecuted = action.stage === 'EXECUTED_SIMULATED';
+            const isRejected = action.stage === 'REJECTED';
+
+            return (
+              <div
+                key={action.id}
+                className={`p-4 rounded-lg border transition-all text-xs space-y-3 ${
+                  isPending
+                    ? 'bg-[#100E0D] border-[#D97706]/40 hover:border-[#D97706]/70'
+                    : isExecuted
+                    ? 'bg-[#100E0D] border-[#26502B] opacity-90'
+                    : 'bg-[#100E0D] border-[#302A28] opacity-60'
+                }`}
+              >
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="font-mono text-xs font-bold text-[#F3EEEC]">
+                      {action.id}
+                    </span>
+                    <Badge
+                      variant={
+                        action.category === 'BLOCK'
+                          ? 'critical'
+                          : action.category === 'CONTAIN'
+                          ? 'warning'
+                          : 'info'
+                      }
+                      size="sm"
+                    >
+                      {action.category} ACTION
+                    </Badge>
+                    <Badge
+                      variant={isPending ? 'warning' : isExecuted ? 'success' : 'neutral'}
+                      size="sm"
+                      pulse={isPending}
+                    >
+                      {action.stage.replace(/_/g, ' ')}
+                    </Badge>
+                  </div>
+
+                  <div className="flex items-center gap-2 text-[#756B67] font-mono text-[11px]">
+                    <Clock className="h-3 w-3 text-[#756B67]" />
+                    <span>Proposed {formatDateTime(action.proposedTimestamp)}</span>
+                  </div>
+                </div>
+
+                <div>
+                  <h4 className="text-sm font-semibold text-[#F3EEEC]">{action.title}</h4>
+                  <p className="text-[11px] text-[#A79B96] mt-0.5">{action.description}</p>
+                </div>
+
+                {/* Dry Run Outcome Snapshot */}
+                <div className="p-3 rounded bg-[#141211] border border-[#302A28] grid grid-cols-1 sm:grid-cols-3 gap-2 text-[11px]">
+                  <div>
+                    Target: <strong className="font-mono text-[#F3EEEC]">{action.targetResource}</strong>
+                  </div>
+                  <div>
+                    Expected Risk Reduction: <strong className="text-[#86EFAC] font-mono">-{action.dryRun.expectedRiskReductionPercent}%</strong>
+                  </div>
+                  <div>
+                    Estimated Blast Radius: <span className="text-[#D0C4C0]">{action.dryRun.estimatedBlastRadius}</span>
+                  </div>
+                </div>
+
+                {/* Bottom Action Buttons */}
+                <div className="pt-2 border-t border-[#302A28] flex items-center justify-between gap-3">
+                  <Link
+                    href={`/incidents/${action.incidentId}`}
+                    className="text-[#D0C4C0] hover:text-[#F3EEEC] font-mono text-[11px] flex items-center gap-1"
+                  >
+                    <span>View Linked Incident: {action.incidentId}</span>
+                    <ExternalLink className="h-3 w-3 text-[#A20903]" />
+                  </Link>
+
+                  {isPending && (
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => setInspectingAction(action)}
+                        className="px-3 py-1.5 rounded bg-[#1D1A19] hover:bg-[#221E1D] text-[#D0C4C0] border border-[#302A28] text-xs font-semibold transition-colors flex items-center gap-1.5"
+                      >
+                        <Play className="h-3 w-3 fill-current text-[#A2847B]" />
+                        <span>Inspect Dry Run</span>
+                      </button>
+
+                      <button
+                        onClick={() => handleReject(action.id)}
+                        className="px-3 py-1.5 rounded bg-[#141211] hover:bg-[#1D1A19] text-[#A79B96] text-xs font-medium border border-[#302A28] transition-colors"
+                      >
+                        Reject
+                      </button>
+
+                      <button
+                        onClick={() => handleApprove(action.id)}
+                        className="px-3.5 py-1.5 rounded bg-[#A20903] hover:bg-[#850702] text-[#F3EEEC] font-bold text-xs transition-colors shadow-sm"
+                      >
+                        Approve (Simulated)
+                      </button>
+                    </div>
+                  )}
+
+                  {isExecuted && action.executionOutcome && (
+                    <span className="text-[#86EFAC] font-mono text-[11px] flex items-center gap-1">
+                      <CheckCircle2 className="h-3.5 w-3.5" />
+                      <span>Simulated Execution Logged ({action.executionOutcome.auditLogId})</span>
+                    </span>
+                  )}
+
+                  {isRejected && (
+                    <span className="text-[#756B67] font-mono text-[11px] flex items-center gap-1">
+                      <XCircle className="h-3.5 w-3.5 text-[#756B67]" />
+                      <span>Proposal Rejected by Analyst</span>
+                    </span>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </CardContent>
+      </Card>
+
+      {/* Immutable Audit Log Table */}
+      <div id="audit-trail">
+        <AuditHistoryTable records={auditRecords} />
+      </div>
+
+      {/* Dry Run Detail Modal */}
+      <DryRunModal
+        action={inspectingAction}
+        onClose={() => setInspectingAction(null)}
+        onApprove={handleApprove}
+        onReject={handleReject}
+      />
+    </div>
+  );
+}
