@@ -38,57 +38,57 @@ export function IntegrationsHub() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-[#1b2a45]">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-[#302A28]">
         <div>
           <div className="flex items-center gap-3">
-            <h2 className="text-2xl font-bold tracking-tight text-slate-100 flex items-center gap-2.5">
-              <Network className="h-6 w-6 text-sky-400" />
+            <h2 className="text-2xl font-bold tracking-tight text-[#F3EEEC] flex items-center gap-2.5">
+              <Network className="h-6 w-6 text-[#A2847B]" />
               <span>Telemetry &amp; Cloud Integrations</span>
             </h2>
             <Badge variant="info" size="sm">
               HYBRID SOC ADAPTERS
             </Badge>
             <Badge
-              variant={mode === 'LIVE' ? 'success' : mode === 'ERROR' ? 'error' : 'neutral'}
+              variant={mode === 'LIVE' ? 'success' : mode === 'ERROR' ? 'critical' : 'neutral'}
               size="sm"
             >
               {mode === 'LIVE' ? 'LIVE ADAPTERS' : mode === 'ERROR' ? 'API DISCONNECTED' : 'DEMO MODE'}
             </Badge>
           </div>
-          <p className="text-xs text-slate-400 mt-1 max-w-2xl">
+          <p className="text-xs text-[#A79B96] mt-1 max-w-2xl">
             Truthful telemetry status for Amazon Bedrock, AWS CloudTrail, Amazon GuardDuty, and AWS Config.
           </p>
         </div>
 
-        <div className="bg-[#0d1524] px-3 py-1.5 rounded-lg border border-[#1b2a45] text-xs">
-          <span className="text-slate-400">AWS Connection Policy:</span>{' '}
-          <strong className="text-amber-400 font-mono">STRICT HONEST DISCLOSURE</strong>
+        <div className="bg-[#141211] px-3 py-1.5 rounded-lg border border-[#302A28] text-xs">
+          <span className="text-[#756B67]">AWS Connection Policy:</span>{' '}
+          <strong className="text-[#A2847B] font-mono">STRICT HONEST DISCLOSURE</strong>
         </div>
       </div>
 
       {/* Honest Provider Policy Banner */}
-      <div className="p-4 rounded-lg bg-blue-950/20 border border-blue-500/30 text-xs text-blue-200 flex items-start gap-3">
-        <Info className="h-5 w-5 text-blue-400 shrink-0 mt-0.5" />
+      <div className="p-4 rounded-lg bg-[#141211] border border-[#302A28] text-xs text-[#A79B96] flex items-start gap-3">
+        <Info className="h-5 w-5 text-[#A2847B] shrink-0 mt-0.5" />
         <div className="space-y-1">
-          <strong className="font-semibold text-slate-100">
+          <strong className="font-semibold text-[#F3EEEC]">
             Truthful Provider Status Guarantee (QALA LABS Standard)
           </strong>
-          <p className="text-slate-300 leading-relaxed text-[11px]">
-            In accordance with project rules, CARTGUARD AI never falsely claims external AWS services are live when credentials are pending. Providers are clearly categorized as <strong>SIMULATED</strong> or <strong>CONNECTED (UNTESTED)</strong> until live verification tokens are confirmed.
+          <p className="text-[#A79B96] leading-relaxed text-[11px]">
+            In accordance with project rules, CARTGUARD AI never falsely claims external AWS services are live when credentials are pending. Providers are clearly categorized as <strong className="text-[#F3EEEC]">SIMULATED</strong> or <strong className="text-[#F3EEEC]">CONNECTED (UNTESTED)</strong> until live verification tokens are confirmed.
           </p>
         </div>
       </div>
 
       {/* Test Log Notification */}
       {testLog && (
-        <div className="p-3.5 rounded-lg bg-amber-950/20 border border-amber-500/40 text-xs text-amber-200 flex items-center justify-between animate-in fade-in-50">
+        <div className="p-3.5 rounded-lg bg-[#5C1811]/20 border border-[#A20903]/40 text-xs text-[#F3EEEC] flex items-center justify-between animate-in fade-in-50">
           <div className="flex items-center gap-2">
-            <AlertCircle className="h-4 w-4 text-amber-400 shrink-0" />
+            <AlertCircle className="h-4 w-4 text-[#A20903] shrink-0" />
             <span>{testLog}</span>
           </div>
           <button
             onClick={() => setTestLog(null)}
-            className="p-1 hover:bg-amber-900/40 rounded text-slate-400 hover:text-white"
+            className="p-1 hover:bg-[#302A28] rounded text-[#756B67] hover:text-[#F3EEEC] transition-colors"
           >
             ✕
           </button>
@@ -102,22 +102,22 @@ export function IntegrationsHub() {
             <CardHeader>
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="font-mono text-xs font-bold text-slate-300">{item.id}</span>
+                  <span className="font-mono text-xs font-bold text-[#A2847B]">{item.id}</span>
                   <Badge variant={item.badgeVariant} size="sm">
                     {item.statusLabel}
                   </Badge>
                 </div>
-                <h3 className="text-sm font-bold text-slate-100 mt-1">{item.name}</h3>
+                <h3 className="text-sm font-bold text-[#F3EEEC] mt-1">{item.name}</h3>
               </div>
             </CardHeader>
 
             <CardContent className="space-y-3">
-              <p className="text-xs text-slate-300 leading-relaxed">{item.description}</p>
+              <p className="text-xs text-[#A79B96] leading-relaxed">{item.description}</p>
 
-              <div className="p-3 rounded bg-[#090e17] border border-[#1b2a45] space-y-1.5 text-xs text-slate-400">
+              <div className="p-3 rounded-lg bg-[#070505] border border-[#302A28] space-y-1.5 text-xs text-[#756B67]">
                 <div className="flex items-center justify-between">
                   <span>Category:</span>
-                  <strong className="text-slate-200 font-mono text-[11px]">{item.category}</strong>
+                  <strong className="text-[#F3EEEC] font-mono text-[11px]">{item.category}</strong>
                 </div>
                 <div className="flex items-center justify-between">
                   <span>Ping Latency:</span>
@@ -125,20 +125,20 @@ export function IntegrationsHub() {
                 </div>
                 <div className="flex items-center justify-between">
                   <span>Last Evaluated:</span>
-                  <span className="font-mono text-[11px] text-slate-300">{formatDateTime(item.lastSyncTimestamp)}</span>
+                  <span className="font-mono text-[11px] text-[#A79B96]">{formatDateTime(item.lastSyncTimestamp)}</span>
                 </div>
               </div>
 
-              <div className="p-2.5 rounded bg-amber-950/15 border border-amber-500/25 text-[11px] text-amber-300 italic">
+              <div className="p-2.5 rounded-lg bg-[#1D1A19] border border-[#302A28] text-[11px] text-[#A79B96] italic">
                 {item.disclaimer}
               </div>
 
-              <div className="pt-2 border-t border-[#1b2a45]/60 flex items-center justify-end">
+              <div className="pt-2 border-t border-[#302A28] flex items-center justify-end">
                 <button
                   onClick={() => handleTestConnection(item.name, item.serviceKey)}
-                  className="px-3 py-1.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium flex items-center gap-1.5 transition-colors"
+                  className="px-3 py-1.5 rounded-lg bg-[#1D1A19] hover:bg-[#302A28] text-[#F3EEEC] text-xs font-medium flex items-center gap-1.5 border border-[#302A28] transition-colors"
                 >
-                  <RefreshCw className="h-3 w-3" />
+                  <RefreshCw className="h-3 w-3 text-[#A2847B]" />
                   <span>Verify Status</span>
                 </button>
               </div>

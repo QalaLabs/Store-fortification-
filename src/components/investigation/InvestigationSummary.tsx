@@ -24,12 +24,12 @@ export function InvestigationSummary({ investigation }: InvestigationSummaryProp
       <Card>
         <CardHeader>
           <CardTitle>
-            <FileText className="h-4 w-4 text-cyan-400" />
-            <span>AI Incident Synthesis & Assessment</span>
+            <FileText className="h-4 w-4 text-[#A20903]" />
+            <span>AI Incident Synthesis &amp; Assessment</span>
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-xs text-slate-200 leading-relaxed bg-[#090e17] p-3.5 rounded-lg border border-[#1b2a45]">
+          <p className="text-xs text-[#F3EEEC] leading-relaxed bg-[#100E0D] p-3.5 rounded-lg border border-[#302A28]">
             {investigation.executiveSummary}
           </p>
         </CardContent>
@@ -41,7 +41,7 @@ export function InvestigationSummary({ investigation }: InvestigationSummaryProp
         <Card>
           <CardHeader>
             <CardTitle>
-              <Lightbulb className="h-4 w-4 text-amber-400" />
+              <Lightbulb className="h-4 w-4 text-[#D97706]" />
               <span>Root-Cause Hypothesis</span>
             </CardTitle>
             <Badge variant="warning" size="sm">
@@ -49,7 +49,7 @@ export function InvestigationSummary({ investigation }: InvestigationSummaryProp
             </Badge>
           </CardHeader>
           <CardContent>
-            <p className="text-xs text-slate-300 leading-relaxed bg-amber-950/15 p-3 rounded-lg border border-amber-500/30">
+            <p className="text-xs text-[#D0C4C0] leading-relaxed bg-[#100E0D] p-3 rounded-lg border border-[#302A28]">
               {investigation.rootCauseHypothesis}
             </p>
           </CardContent>
@@ -59,15 +59,15 @@ export function InvestigationSummary({ investigation }: InvestigationSummaryProp
         <Card>
           <CardHeader>
             <CardTitle>
-              <TrendingDown className="h-4 w-4 text-red-400" />
-              <span>Business & Regulatory Impact</span>
+              <TrendingDown className="h-4 w-4 text-[#A20903]" />
+              <span>Business &amp; Regulatory Impact</span>
             </CardTitle>
             <Badge variant="critical" size="sm">
               Impact Scope
             </Badge>
           </CardHeader>
           <CardContent>
-            <p className="text-xs text-slate-300 leading-relaxed bg-red-950/15 p-3 rounded-lg border border-red-500/30">
+            <p className="text-xs text-[#D0C4C0] leading-relaxed bg-[#100E0D] p-3 rounded-lg border border-[#302A28]">
               {investigation.businessImpact}
             </p>
           </CardContent>
@@ -80,26 +80,26 @@ export function InvestigationSummary({ investigation }: InvestigationSummaryProp
         <Card>
           <CardHeader>
             <CardTitle>
-              <Zap className="h-4 w-4 text-emerald-400" />
+              <Zap className="h-4 w-4 text-[#4ADE80]" />
               <span>Recommended Remediation</span>
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="p-3 bg-emerald-950/20 rounded-lg border border-emerald-500/30 text-xs text-emerald-200 space-y-2">
-              <span className="font-bold block">Analyst Action Priority:</span>
+            <div className="p-3 bg-[#100E0D] rounded-lg border border-[#302A28] text-xs text-[#D0C4C0] space-y-2">
+              <span className="font-bold text-[#F3EEEC] block">Analyst Action Priority:</span>
               <p className="leading-relaxed">{investigation.recommendedImmediateAction}</p>
-              <div className="pt-2 border-t border-emerald-500/20 flex flex-wrap items-center justify-between gap-2">
+              <div className="pt-2 border-t border-[#302A28] flex flex-wrap items-center justify-between gap-2">
                 <Link
                   href="/identity/agents?highlightTx=tx-agent-2026-8804"
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-purple-950/60 hover:bg-purple-900/60 text-purple-300 border border-purple-500/40 text-xs font-medium transition-colors"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-[#1D1A19] hover:bg-[#221E1D] text-[#D0C4C0] border border-[#302A28] text-xs font-medium transition-colors"
                 >
-                  <Bot className="h-3.5 w-3.5 text-purple-400" />
+                  <Bot className="h-3.5 w-3.5 text-[#A2847B]" />
                   <span>Inspect R8 Agent Violation</span>
                 </Link>
 
                 <Link
                   href="/operations/response"
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold text-xs transition-colors"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-[#A20903] hover:bg-[#850702] text-[#F3EEEC] font-bold text-xs transition-colors"
                 >
                   <span>Authorize in Response Centre</span>
                   <ArrowRight className="h-3.5 w-3.5" />
@@ -113,12 +113,12 @@ export function InvestigationSummary({ investigation }: InvestigationSummaryProp
         <Card>
           <CardHeader>
             <CardTitle>
-              <HelpCircle className="h-4 w-4 text-slate-400" />
-              <span>Unknowns & Verification Gaps</span>
+              <HelpCircle className="h-4 w-4 text-[#756B67]" />
+              <span>Unknowns &amp; Verification Gaps</span>
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <ul className="text-xs text-slate-400 space-y-2 list-disc list-inside bg-[#090e17] p-3 rounded-lg border border-[#1b2a45]">
+            <ul className="text-xs text-[#A79B96] space-y-2 list-disc list-inside bg-[#100E0D] p-3 rounded-lg border border-[#302A28]">
               {investigation.unknownsAndLimitations.map((item, i) => (
                 <li key={i} className="leading-relaxed">
                   {item}

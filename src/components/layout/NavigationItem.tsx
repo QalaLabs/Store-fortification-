@@ -36,17 +36,17 @@ export function NavigationItem({
       onClick={onNavigate}
       title={isCollapsed ? label : undefined}
       className={cn(
-        'group relative flex items-center gap-3 px-3 py-2 rounded-md text-xs font-medium transition-colors duration-150',
+        'group relative flex items-center gap-3 px-3 py-2 rounded-md text-xs font-medium transition-all duration-150',
         isActive
-          ? 'bg-blue-600/15 text-blue-400 font-semibold border-l-2 border-blue-500 rounded-l-none'
-          : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50',
+          ? 'bg-[#1D1A19] text-[#F3EEEC] font-semibold border-l-2 border-[#A20903] rounded-l-none'
+          : 'text-[#A79B96] hover:text-[#F3EEEC] hover:bg-[#141211]',
         isCollapsed && 'justify-center px-2 py-2.5'
       )}
     >
       <Icon
         className={cn(
           'h-4 w-4 shrink-0 transition-colors',
-          isActive ? 'text-blue-400' : 'text-slate-400 group-hover:text-slate-200'
+          isActive ? 'text-[#F3EEEC]' : 'text-[#756B67] group-hover:text-[#F3EEEC]'
         )}
       />
 
@@ -58,10 +58,10 @@ export function NavigationItem({
         <span
           className={cn(
             'ml-auto text-[10px] font-semibold px-1.5 py-0.5 rounded border leading-none',
-            badgeVariant === 'critical' && 'bg-red-950/80 text-red-300 border-red-500/40',
-            badgeVariant === 'high' && 'bg-orange-950/80 text-orange-300 border-orange-500/40',
-            badgeVariant === 'info' && 'bg-blue-950/80 text-blue-300 border-blue-500/40',
-            badgeVariant === 'neutral' && 'bg-slate-800 text-slate-400 border-slate-700'
+            badgeVariant === 'critical' && 'bg-[#5C1811]/60 text-[#FCA5A5] border-[#A20903]/60',
+            badgeVariant === 'high' && 'bg-[#7C2D12]/50 text-[#FDBA74] border-[#EA580C]/50',
+            badgeVariant === 'info' && 'bg-[#382D2A] text-[#D0C4C0] border-[#5A4B46]',
+            badgeVariant === 'neutral' && 'bg-[#1D1A19] text-[#A79B96] border-[#302A28]'
           )}
         >
           {badge}
@@ -70,10 +70,10 @@ export function NavigationItem({
 
       {/* Floating tooltip when collapsed */}
       {isCollapsed && (
-        <div className="absolute left-full ml-2.5 px-2.5 py-1 bg-slate-900 border border-slate-700 text-slate-200 text-xs rounded shadow-lg opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-opacity z-50 whitespace-nowrap">
+        <div className="absolute left-full ml-2.5 px-2.5 py-1 bg-[#141211] border border-[#302A28] text-[#F3EEEC] text-xs rounded shadow-lg opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-opacity z-50 whitespace-nowrap">
           {label}
           {badge !== undefined && (
-            <span className="ml-1.5 text-[10px] text-blue-400">({badge})</span>
+            <span className="ml-1.5 text-[10px] text-[#A2847B]">({badge})</span>
           )}
         </div>
       )}

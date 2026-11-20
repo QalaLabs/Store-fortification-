@@ -35,13 +35,13 @@ export function TransactionDetailDrawer({
   const formattedSpent = (transaction.mandate.spentSoFarCents / 100).toFixed(2);
 
   return (
-    <div className="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-[#0d1524] border border-[#1b2a45] rounded-xl max-w-2xl w-full p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <div className="bg-[#141211] border border-[#302A28] rounded-xl max-w-2xl w-full p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="flex items-start justify-between border-b border-[#1b2a45] pb-3">
+        <div className="flex items-start justify-between border-b border-[#302A28] pb-3">
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-mono text-sm font-bold text-slate-200">
+              <span className="font-mono text-sm font-bold text-[#F3EEEC]">
                 {transaction.id}
               </span>
               <Badge
@@ -52,14 +52,14 @@ export function TransactionDetailDrawer({
                 {transaction.outcome.replace(/_/g, ' ')}
               </Badge>
             </div>
-            <h3 className="text-base font-bold text-slate-100 mt-1">
+            <h3 className="text-base font-bold text-[#F3EEEC] mt-1">
               R8 Agent Payment Authority Assessment
             </h3>
           </div>
 
           <button
             onClick={onClose}
-            className="p-1 rounded text-slate-400 hover:text-white"
+            className="p-1 rounded text-[#756B67] hover:text-[#F3EEEC]"
           >
             <X className="h-4 w-4" />
           </button>
@@ -69,27 +69,27 @@ export function TransactionDetailDrawer({
         <div
           className={`p-3.5 rounded-lg border text-xs space-y-1 ${
             isVerified
-              ? 'bg-emerald-950/25 border-emerald-500/40 text-emerald-200'
-              : 'bg-red-950/25 border-red-500/40 text-red-200'
+              ? 'bg-[#26502B]/20 border-[#26502B] text-[#86EFAC]'
+              : 'bg-[#5C1811]/25 border-[#A20903]/40 text-[#FCA5A5]'
           }`}
         >
           <div className="flex items-center gap-2 font-bold text-sm">
             {isVerified ? (
-              <ShieldCheck className="h-4 w-4 text-emerald-400" />
+              <ShieldCheck className="h-4 w-4 text-[#4ADE80]" />
             ) : (
-              <AlertTriangle className="h-4 w-4 text-red-400" />
+              <AlertTriangle className="h-4 w-4 text-[#A20903]" />
             )}
             <span>{transaction.verificationMessage}</span>
           </div>
 
           {transaction.failureReason && (
-            <p className="text-[11px] text-slate-300 pt-1 border-t border-red-500/20">
+            <p className="text-[11px] text-[#D0C4C0] pt-1 border-t border-[#302A28]">
               <strong>Failure Cause:</strong> {transaction.failureReason}
             </p>
           )}
 
           {transaction.recommendedReviewAction && (
-            <p className="text-[11px] text-amber-300 font-medium">
+            <p className="text-[11px] text-[#FDE047] font-medium">
               <strong>Action:</strong> {transaction.recommendedReviewAction}
             </p>
           )}
@@ -98,60 +98,60 @@ export function TransactionDetailDrawer({
         {/* The 3 Core Questions from Whiteboard & PRD */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
           {/* 1. Who is acting? */}
-          <div className="p-3 bg-[#090e17] rounded-lg border border-[#1b2a45] space-y-2">
-            <div className="flex items-center gap-1.5 text-slate-300 font-semibold border-b border-[#1b2a45]/60 pb-1.5">
-              <Bot className="h-3.5 w-3.5 text-cyan-400" />
+          <div className="p-3 bg-[#100E0D] rounded-lg border border-[#302A28] space-y-2">
+            <div className="flex items-center gap-1.5 text-[#D0C4C0] font-semibold border-b border-[#302A28] pb-1.5">
+              <Bot className="h-3.5 w-3.5 text-[#A2847B]" />
               <span>1. Who is Acting?</span>
             </div>
-            <div className="space-y-1 text-slate-400">
+            <div className="space-y-1 text-[#756B67]">
               <div>
-                Agent: <strong className="text-slate-200">{transaction.agent.agentName}</strong>
+                Agent: <strong className="text-[#F3EEEC]">{transaction.agent.agentName}</strong>
               </div>
-              <div>ID: <span className="font-mono text-slate-300">{transaction.agent.agentId}</span></div>
-              <div>Type: <span className="text-slate-300">{transaction.agent.agentType}</span></div>
+              <div>ID: <span className="font-mono text-[#D0C4C0]">{transaction.agent.agentId}</span></div>
+              <div>Type: <span className="text-[#D0C4C0]">{transaction.agent.agentType}</span></div>
               <div>
-                Principal: <strong className="text-slate-200">{transaction.principal.customerName}</strong>
+                Principal: <strong className="text-[#F3EEEC]">{transaction.principal.customerName}</strong>
               </div>
-              <div>Customer ID: <span className="font-mono text-slate-300">{transaction.principal.customerId}</span></div>
-              <div>Runtime: <span className="text-[10px] text-slate-400">{transaction.agent.runtimeEnvironment}</span></div>
+              <div>Customer ID: <span className="font-mono text-[#D0C4C0]">{transaction.principal.customerId}</span></div>
+              <div>Runtime: <span className="text-[10px] text-[#756B67]">{transaction.agent.runtimeEnvironment}</span></div>
             </div>
           </div>
 
           {/* 2. What authority does the agent have? */}
-          <div className="p-3 bg-[#090e17] rounded-lg border border-[#1b2a45] space-y-2">
-            <div className="flex items-center gap-1.5 text-slate-300 font-semibold border-b border-[#1b2a45]/60 pb-1.5">
-              <FileCheck2 className="h-3.5 w-3.5 text-blue-400" />
+          <div className="p-3 bg-[#100E0D] rounded-lg border border-[#302A28] space-y-2">
+            <div className="flex items-center gap-1.5 text-[#D0C4C0] font-semibold border-b border-[#302A28] pb-1.5">
+              <FileCheck2 className="h-3.5 w-3.5 text-[#A2847B]" />
               <span>2. Agent Authority</span>
             </div>
-            <div className="space-y-1 text-slate-400">
-              <div>Mandate: <span className="font-mono text-slate-300">{transaction.mandate.mandateId}</span></div>
+            <div className="space-y-1 text-[#756B67]">
+              <div>Mandate: <span className="font-mono text-[#D0C4C0]">{transaction.mandate.mandateId}</span></div>
               <div>
-                Limit: <strong className="text-slate-200">${formattedLimit}</strong>
+                Limit: <strong className="text-[#F3EEEC]">${formattedLimit}</strong>
               </div>
               <div>
-                Spent so far: <span className="font-mono text-slate-300">${formattedSpent}</span>
+                Spent so far: <span className="font-mono text-[#D0C4C0]">${formattedSpent}</span>
               </div>
               <div>
-                Expiry: <span className="font-mono text-slate-300">{transaction.mandate.expiresAt.split('T')[0]}</span>
+                Expiry: <span className="font-mono text-[#D0C4C0]">{transaction.mandate.expiresAt.split('T')[0]}</span>
               </div>
-              <div className="text-[10px]">
+              <div className="text-[10px] text-[#756B67]">
                 Allowed: {transaction.mandate.allowedMerchants.join(', ')}
               </div>
             </div>
           </div>
 
           {/* 3. Who owns the payment method? */}
-          <div className="p-3 bg-[#090e17] rounded-lg border border-[#1b2a45] space-y-2">
-            <div className="flex items-center gap-1.5 text-slate-300 font-semibold border-b border-[#1b2a45]/60 pb-1.5">
-              <CreditCard className="h-3.5 w-3.5 text-amber-400" />
+          <div className="p-3 bg-[#100E0D] rounded-lg border border-[#302A28] space-y-2">
+            <div className="flex items-center gap-1.5 text-[#D0C4C0] font-semibold border-b border-[#302A28] pb-1.5">
+              <CreditCard className="h-3.5 w-3.5 text-[#D97706]" />
               <span>3. Payment Owner</span>
             </div>
-            <div className="space-y-1 text-slate-400">
+            <div className="space-y-1 text-[#756B67]">
               <div>
-                Cardholder: <strong className="text-slate-200">{transaction.paymentMethod.ownerName}</strong>
+                Cardholder: <strong className="text-[#F3EEEC]">{transaction.paymentMethod.ownerName}</strong>
               </div>
               <div>
-                Card: <span className="font-mono text-slate-300">{transaction.paymentMethod.cardBrand} •••• {transaction.paymentMethod.last4}</span>
+                Card: <span className="font-mono text-[#D0C4C0]">{transaction.paymentMethod.cardBrand} •••• {transaction.paymentMethod.last4}</span>
               </div>
               <div className="flex items-center gap-1.5 pt-1">
                 <span className="text-[10px]">Name Match:</span>
@@ -164,7 +164,7 @@ export function TransactionDetailDrawer({
               </div>
               <div className="flex items-center gap-1.5">
                 <span className="text-[10px]">Billing Match:</span>
-                <span className={transaction.paymentMethod.billingAddressMatch ? 'text-emerald-400' : 'text-red-400'}>
+                <span className={transaction.paymentMethod.billingAddressMatch ? 'text-[#86EFAC]' : 'text-[#FCA5A5]'}>
                   {transaction.paymentMethod.billingAddressMatch ? 'Verified' : 'Unverified'}
                 </span>
               </div>
@@ -173,30 +173,30 @@ export function TransactionDetailDrawer({
         </div>
 
         {/* Transaction Request Payload Summary */}
-        <div className="p-3 bg-[#090e17] rounded-lg border border-[#1b2a45] space-y-2 text-xs">
-          <span className="font-semibold text-slate-300 uppercase tracking-wider text-[10px] block">
+        <div className="p-3 bg-[#100E0D] rounded-lg border border-[#302A28] space-y-2 text-xs">
+          <span className="font-semibold text-[#756B67] uppercase tracking-wider text-[10px] block">
             Transaction Execution Intent
           </span>
-          <div className="flex flex-wrap items-center justify-between gap-3 text-slate-400">
+          <div className="flex flex-wrap items-center justify-between gap-3 text-[#A79B96]">
             <div>
-              Merchant: <strong className="text-slate-100">{transaction.merchantName}</strong> ({transaction.merchantCategory})
+              Merchant: <strong className="text-[#F3EEEC]">{transaction.merchantName}</strong> ({transaction.merchantCategory})
             </div>
             <div>
-              Amount: <strong className="text-xl font-mono text-slate-100">${formattedAmount} {transaction.currency}</strong>
+              Amount: <strong className="text-xl font-mono text-[#F3EEEC]">${formattedAmount} {transaction.currency}</strong>
             </div>
             <div>
-              Timestamp: <span className="font-mono text-slate-300">{formatDateTime(transaction.timestamp)}</span>
+              Timestamp: <span className="font-mono text-[#D0C4C0]">{formatDateTime(transaction.timestamp)}</span>
             </div>
           </div>
         </div>
 
         {/* Actions bar */}
-        <div className="flex items-center justify-between pt-2 border-t border-[#1b2a45]">
+        <div className="flex items-center justify-between pt-2 border-t border-[#302A28]">
           <div className="flex items-center gap-2">
             {!isVerified && (
               <Link
                 href={transaction.id === 'tx-agent-2026-8804' ? '/incidents/INC-2026-0841' : '/incidents'}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-red-950/60 hover:bg-red-900/60 text-red-300 border border-red-500/40 text-xs font-semibold transition-colors"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded bg-[#5C1811]/40 hover:bg-[#5C1811]/60 text-[#FCA5A5] border border-[#A20903]/40 text-xs font-semibold transition-colors"
               >
                 <span>
                   {transaction.id === 'tx-agent-2026-8804'
@@ -210,7 +210,7 @@ export function TransactionDetailDrawer({
 
           <button
             onClick={onClose}
-            className="px-4 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium rounded transition-colors"
+            className="px-4 py-1.5 bg-[#1D1A19] hover:bg-[#221E1D] text-[#A79B96] text-xs font-medium rounded border border-[#302A28] transition-colors"
           >
             Close
           </button>

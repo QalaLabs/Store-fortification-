@@ -91,7 +91,7 @@ export function AskInvestigator({
       <CardHeader>
         <div className="flex items-center justify-between w-full">
           <CardTitle>
-            <Bot className="h-4 w-4 text-cyan-400" />
+            <Bot className="h-4 w-4 text-[#A20903]" />
             <span>Ask AI Investigator</span>
           </CardTitle>
           <Badge variant="warning" size="sm">
@@ -103,7 +103,7 @@ export function AskInvestigator({
       <CardContent className="flex-1 flex flex-col justify-between space-y-4">
         {/* Preset Question Pills */}
         <div className="space-y-1.5">
-          <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block">
+          <span className="text-[10px] font-semibold text-[#756B67] uppercase tracking-wider block">
             Suggested Analyst Inquiries:
           </span>
           <div className="flex flex-wrap gap-1.5">
@@ -111,9 +111,9 @@ export function AskInvestigator({
               <button
                 key={i}
                 onClick={() => handleAskQuestion(qa.question)}
-                className="text-xs text-left px-2.5 py-1 rounded bg-[#090e17] hover:bg-[#121d31] text-slate-300 hover:text-white border border-[#1b2a45] hover:border-blue-500/40 transition-colors flex items-center gap-1.5"
+                className="text-xs text-left px-2.5 py-1 rounded bg-[#100E0D] hover:bg-[#1D1A19] text-[#A79B96] hover:text-[#F3EEEC] border border-[#302A28] hover:border-[#4D4440] transition-colors flex items-center gap-1.5"
               >
-                <Sparkles className="h-3 w-3 text-cyan-400 shrink-0" />
+                <Sparkles className="h-3 w-3 text-[#A2847B] shrink-0" />
                 <span>{qa.question}</span>
               </button>
             ))}
@@ -121,7 +121,7 @@ export function AskInvestigator({
         </div>
 
         {/* Chat History Container */}
-        <div className="flex-1 min-h-[240px] max-h-[360px] overflow-y-auto space-y-3 bg-[#090e17] p-3.5 rounded-lg border border-[#1b2a45]">
+        <div className="flex-1 min-h-[240px] max-h-[360px] overflow-y-auto space-y-3 bg-[#100E0D] p-3.5 rounded-lg border border-[#302A28]">
           {messages.map((msg) => (
             <div
               key={msg.id}
@@ -130,7 +130,7 @@ export function AskInvestigator({
               }`}
             >
               {msg.sender === 'assistant' && (
-                <div className="h-6 w-6 rounded-full bg-blue-600/30 border border-blue-500/50 flex items-center justify-center shrink-0 text-cyan-400">
+                <div className="h-6 w-6 rounded-md bg-[#1D1A19] border border-[#302A28] flex items-center justify-center shrink-0 text-[#A20903]">
                   <Bot className="h-3.5 w-3.5" />
                 </div>
               )}
@@ -138,40 +138,40 @@ export function AskInvestigator({
               <div
                 className={`max-w-[85%] rounded-lg p-3 space-y-2 ${
                   msg.sender === 'user'
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-[#121d31] text-slate-200 border border-[#1b2a45]'
+                    ? 'bg-[#1D1A19] text-[#F3EEEC] border border-[#302A28]'
+                    : 'bg-[#141211] text-[#D0C4C0] border border-[#302A28]'
                 }`}
               >
                 <p className="leading-relaxed whitespace-pre-line">{msg.text}</p>
 
                 {/* Evidence References in assistant replies */}
                 {msg.relatedEventIds && msg.relatedEventIds.length > 0 && (
-                  <div className="pt-2 border-t border-[#1b2a45]/60 flex items-center gap-1.5 flex-wrap">
-                    <span className="text-[10px] text-slate-400 font-semibold">
+                  <div className="pt-2 border-t border-[#302A28] flex items-center gap-1.5 flex-wrap">
+                    <span className="text-[10px] text-[#756B67] font-semibold">
                       Referenced Signals:
                     </span>
                     {msg.relatedEventIds.map((eid) => (
                       <button
                         key={eid}
                         onClick={() => onSelectEvent(eid)}
-                        className="font-mono text-[10px] text-cyan-300 bg-cyan-950/60 hover:bg-cyan-950 px-1.5 py-0.5 rounded border border-cyan-500/40 flex items-center gap-1"
+                        className="font-mono text-[10px] text-[#D0C4C0] bg-[#1D1A19] hover:bg-[#221E1D] px-1.5 py-0.5 rounded border border-[#302A28] flex items-center gap-1"
                       >
                         <span>{eid}</span>
-                        <ExternalLink className="h-2 w-2" />
+                        <ExternalLink className="h-2 w-2 text-[#756B67]" />
                       </button>
                     ))}
                   </div>
                 )}
 
                 {msg.evidenceNote && (
-                  <p className="text-[10px] text-slate-400 italic">
+                  <p className="text-[10px] text-[#756B67] italic">
                     Note: {msg.evidenceNote}
                   </p>
                 )}
               </div>
 
               {msg.sender === 'user' && (
-                <div className="h-6 w-6 rounded-full bg-slate-700 flex items-center justify-center shrink-0 text-slate-200 text-[10px] font-bold">
+                <div className="h-6 w-6 rounded-md bg-[#1D1A19] border border-[#302A28] flex items-center justify-center shrink-0 text-[#D0C4C0] text-[10px] font-bold">
                   AY
                 </div>
               )}
@@ -186,18 +186,18 @@ export function AskInvestigator({
             value={inputText}
             onChange={(e) => setInputText(e.target.value)}
             placeholder="Ask about evidence, customer PII exposure, or containment..."
-            className="flex-1 bg-[#090e17] border border-[#1b2a45] rounded-md px-3 py-2 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-blue-500"
+            className="flex-1 bg-[#100E0D] border border-[#302A28] rounded-md px-3 py-2 text-xs text-[#F3EEEC] placeholder-[#756B67] focus:outline-none focus:border-[#A20903]/60"
           />
           <button
             type="submit"
-            className="px-3.5 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-md text-xs font-semibold flex items-center gap-1.5 transition-colors"
+            className="px-3.5 py-2 bg-[#A20903] hover:bg-[#850702] text-[#F3EEEC] rounded-md text-xs font-semibold flex items-center gap-1.5 transition-colors"
           >
             <Send className="h-3 w-3" />
             <span className="hidden sm:inline">Ask</span>
           </button>
         </form>
 
-        <p className="text-[10px] text-slate-500 text-center">
+        <p className="text-[10px] text-[#756B67] text-center">
           Investigator uses local deterministic security reasoning adapter. Does not transmit data outside local environment.
         </p>
       </CardContent>

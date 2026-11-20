@@ -133,11 +133,11 @@ export function ResponseCentre({
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-[#1b2a45]">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-[#302A28]">
         <div>
           <div className="flex items-center gap-3">
-            <h2 className="text-2xl font-bold tracking-tight text-slate-100 flex items-center gap-2.5">
-              <Zap className="h-6 w-6 text-amber-400" />
+            <h2 className="text-2xl font-bold tracking-tight text-[#F3EEEC] flex items-center gap-2.5">
+              <Zap className="h-6 w-6 text-[#A20903]" />
               <span>Response Centre &amp; Containment Control</span>
             </h2>
             <Badge variant="warning" size="sm" pulse={pendingCount > 0}>
@@ -150,57 +150,57 @@ export function ResponseCentre({
               {mode === 'LIVE' ? 'LIVE ACTIONS' : mode === 'ERROR' ? 'API DISCONNECTED' : 'DEMO MODE'}
             </Badge>
           </div>
-          <p className="text-xs text-slate-400 mt-1 max-w-2xl">
+          <p className="text-xs text-[#A79B96] mt-1 max-w-2xl">
             Controlled remediation workflow: reviews automated blast-radius dry runs, enforces human authorization, and logs simulated executions to the audit trail.
           </p>
         </div>
 
         {/* Counter Pills */}
         <div className="flex items-center gap-2.5 flex-wrap">
-          <div className="bg-amber-950/40 px-3 py-1.5 rounded-lg border border-amber-500/40 text-xs">
-            <span className="text-amber-300">Pending Authorization:</span>{' '}
-            <strong className="text-amber-200 font-mono">{pendingCount}</strong>
+          <div className="bg-[#78350F]/30 px-3 py-1.5 rounded-lg border border-[#D97706]/40 text-xs">
+            <span className="text-[#FDE047]">Pending Authorization:</span>{' '}
+            <strong className="text-[#F3EEEC] font-mono">{pendingCount}</strong>
           </div>
-          <div className="bg-emerald-950/40 px-3 py-1.5 rounded-lg border border-emerald-500/40 text-xs">
-            <span className="text-emerald-300">Simulated Executed:</span>{' '}
-            <strong className="text-emerald-200 font-mono">{executedCount}</strong>
+          <div className="bg-[#26502B]/30 px-3 py-1.5 rounded-lg border border-[#26502B] text-xs">
+            <span className="text-[#86EFAC]">Simulated Executed:</span>{' '}
+            <strong className="text-[#86EFAC] font-mono">{executedCount}</strong>
           </div>
-          <div className="bg-[#0d1524] px-3 py-1.5 rounded-lg border border-[#1b2a45] text-xs">
-            <span className="text-slate-400">Total Audit Logs:</span>{' '}
-            <strong className="text-slate-200 font-mono">{auditRecords.length}</strong>
+          <div className="bg-[#141211] px-3 py-1.5 rounded-lg border border-[#302A28] text-xs">
+            <span className="text-[#756B67]">Total Audit Logs:</span>{' '}
+            <strong className="text-[#D0C4C0] font-mono">{auditRecords.length}</strong>
           </div>
         </div>
       </div>
 
       {/* Feedback Banner with Connected Next Step Navigation */}
       {feedbackBanner && (
-        <div className="p-4 rounded-xl bg-gradient-to-r from-emerald-950/40 via-[#0d1524] to-[#0d1524] border border-emerald-500/50 text-xs text-emerald-200 space-y-2 animate-in fade-in-50">
+        <div className="p-4 rounded-xl bg-[#141211] border border-[#26502B] text-xs text-[#86EFAC] space-y-2 animate-in fade-in-50">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
+              <CheckCircle2 className="h-4 w-4 text-[#4ADE80] shrink-0" />
               <span className="font-semibold">{feedbackBanner}</span>
             </div>
             <button
               onClick={() => setFeedbackBanner(null)}
-              className="p-1 hover:bg-emerald-900/40 rounded text-slate-400 hover:text-white"
+              className="p-1 hover:bg-[#1D1A19] rounded text-[#756B67] hover:text-[#F3EEEC]"
             >
               ✕
             </button>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2 pt-1 border-t border-emerald-500/20 text-xs">
-            <span className="text-slate-400 font-semibold text-[11px] mr-1">Connected Next Steps:</span>
+          <div className="flex flex-wrap items-center gap-2 pt-1 border-t border-[#302A28] text-xs">
+            <span className="text-[#756B67] font-semibold text-[11px] mr-1">Connected Next Steps:</span>
             <Link
               href="/identity/agents?highlightTx=tx-agent-2026-8804"
-              className="px-2.5 py-1 rounded bg-purple-950/60 hover:bg-purple-900/60 text-purple-300 border border-purple-500/40 flex items-center gap-1.5 font-medium transition-colors"
+              className="px-2.5 py-1 rounded bg-[#1D1A19] hover:bg-[#221E1D] text-[#D0C4C0] border border-[#302A28] flex items-center gap-1.5 font-medium transition-colors"
             >
-              <Bot className="h-3.5 w-3.5 text-purple-400" />
+              <Bot className="h-3.5 w-3.5 text-[#A2847B]" />
               <span>Step 5: Verify Correlated Autonomous Agent Mandate (R8)</span>
-              <ArrowRight className="h-3 w-3" />
+              <ArrowRight className="h-3 w-3 text-[#A20903]" />
             </Link>
             <a
               href="#audit-trail"
-              className="px-2.5 py-1 rounded bg-[#090e17] hover:bg-slate-800 text-slate-300 border border-[#1b2a45] flex items-center gap-1 transition-colors"
+              className="px-2.5 py-1 rounded bg-[#100E0D] hover:bg-[#1D1A19] text-[#A79B96] border border-[#302A28] flex items-center gap-1 transition-colors"
             >
               <span>Step 6: Inspect Logged Entry in Audit Journal Below &darr;</span>
             </a>
@@ -209,40 +209,40 @@ export function ResponseCentre({
       )}
 
       {/* Response Sequence Pipeline Visualizer */}
-      <div className="bg-[#0d1524] p-4 rounded-lg border border-[#1b2a45] space-y-3">
-        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
+      <div className="bg-[#141211] p-4 rounded-lg border border-[#302A28] space-y-3">
+        <span className="text-[10px] font-bold text-[#756B67] uppercase tracking-wider block">
           Required Containment Safety Pipeline
         </span>
 
         <div className="grid grid-cols-1 sm:grid-cols-5 gap-2 text-xs">
-          <div className="p-2.5 rounded bg-[#090e17] border border-blue-500/30 text-center">
-            <span className="text-[10px] text-blue-400 font-bold block">STAGE 1</span>
-            <span className="font-semibold text-slate-200">1. PROPOSE</span>
-            <span className="text-[10px] text-slate-400 block mt-0.5">Correlation Engine</span>
+          <div className="p-2.5 rounded bg-[#100E0D] border border-[#302A28] text-center">
+            <span className="text-[10px] text-[#A79B96] font-bold block">STAGE 1</span>
+            <span className="font-semibold text-[#F3EEEC]">1. PROPOSE</span>
+            <span className="text-[10px] text-[#756B67] block mt-0.5">Correlation Engine</span>
           </div>
 
-          <div className="p-2.5 rounded bg-[#090e17] border border-cyan-500/30 text-center">
-            <span className="text-[10px] text-cyan-400 font-bold block">STAGE 2</span>
-            <span className="font-semibold text-slate-200">2. DRY RUN</span>
-            <span className="text-[10px] text-slate-400 block mt-0.5">Blast Radius Check</span>
+          <div className="p-2.5 rounded bg-[#100E0D] border border-[#302A28] text-center">
+            <span className="text-[10px] text-[#D0C4C0] font-bold block">STAGE 2</span>
+            <span className="font-semibold text-[#F3EEEC]">2. DRY RUN</span>
+            <span className="text-[10px] text-[#756B67] block mt-0.5">Blast Radius Check</span>
           </div>
 
-          <div className="p-2.5 rounded bg-[#090e17] border border-amber-500/40 text-center">
-            <span className="text-[10px] text-amber-400 font-bold block">STAGE 3</span>
-            <span className="font-semibold text-amber-200">3. HUMAN APPROVAL</span>
-            <span className="text-[10px] text-slate-400 block mt-0.5">SecOps Authorization</span>
+          <div className="p-2.5 rounded bg-[#100E0D] border border-[#A20903]/40 text-center">
+            <span className="text-[10px] text-[#FCA5A5] font-bold block">STAGE 3</span>
+            <span className="font-semibold text-[#FCA5A5]">3. HUMAN APPROVAL</span>
+            <span className="text-[10px] text-[#756B67] block mt-0.5">SecOps Authorization</span>
           </div>
 
-          <div className="p-2.5 rounded bg-[#090e17] border border-emerald-500/30 text-center">
-            <span className="text-[10px] text-emerald-400 font-bold block">STAGE 4</span>
-            <span className="font-semibold text-slate-200">4. SIMULATED EXECUTION</span>
-            <span className="text-[10px] text-slate-400 block mt-0.5">Mock Safety Shield</span>
+          <div className="p-2.5 rounded bg-[#100E0D] border border-[#26502B] text-center">
+            <span className="text-[10px] text-[#86EFAC] font-bold block">STAGE 4</span>
+            <span className="font-semibold text-[#86EFAC]">4. SIMULATED EXECUTION</span>
+            <span className="text-[10px] text-[#756B67] block mt-0.5">Mock Safety Shield</span>
           </div>
 
-          <div className="p-2.5 rounded bg-[#090e17] border border-slate-700 text-center">
-            <span className="text-[10px] text-slate-400 font-bold block">STAGE 5</span>
-            <span className="font-semibold text-slate-200">5. AUDIT LOG</span>
-            <span className="text-[10px] text-slate-400 block mt-0.5">SHA-256 Record</span>
+          <div className="p-2.5 rounded bg-[#100E0D] border border-[#302A28] text-center">
+            <span className="text-[10px] text-[#756B67] font-bold block">STAGE 5</span>
+            <span className="font-semibold text-[#D0C4C0]">5. AUDIT LOG</span>
+            <span className="text-[10px] text-[#756B67] block mt-0.5">SHA-256 Record</span>
           </div>
         </div>
       </div>
@@ -251,7 +251,7 @@ export function ResponseCentre({
       <Card>
         <CardHeader>
           <CardTitle>
-            <Zap className="h-4 w-4 text-amber-400" />
+            <Zap className="h-4 w-4 text-[#A20903]" />
             <span>Remediation Proposals Awaiting Action</span>
           </CardTitle>
         </CardHeader>
@@ -267,15 +267,15 @@ export function ResponseCentre({
                 key={action.id}
                 className={`p-4 rounded-lg border transition-all text-xs space-y-3 ${
                   isPending
-                    ? 'bg-[#090e17] border-amber-500/40 hover:border-amber-500/70'
+                    ? 'bg-[#100E0D] border-[#D97706]/40 hover:border-[#D97706]/70'
                     : isExecuted
-                    ? 'bg-[#090e17] border-emerald-500/30 opacity-90'
-                    : 'bg-[#090e17] border-slate-800 opacity-60'
+                    ? 'bg-[#100E0D] border-[#26502B] opacity-90'
+                    : 'bg-[#100E0D] border-[#302A28] opacity-60'
                 }`}
               >
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className="font-mono text-xs font-bold text-slate-200">
+                    <span className="font-mono text-xs font-bold text-[#F3EEEC]">
                       {action.id}
                     </span>
                     <Badge
@@ -299,60 +299,60 @@ export function ResponseCentre({
                     </Badge>
                   </div>
 
-                  <div className="flex items-center gap-2 text-slate-400 font-mono text-[11px]">
-                    <Clock className="h-3 w-3 text-slate-500" />
+                  <div className="flex items-center gap-2 text-[#756B67] font-mono text-[11px]">
+                    <Clock className="h-3 w-3 text-[#756B67]" />
                     <span>Proposed {formatDateTime(action.proposedTimestamp)}</span>
                   </div>
                 </div>
 
                 <div>
-                  <h4 className="text-sm font-semibold text-slate-100">{action.title}</h4>
-                  <p className="text-[11px] text-slate-400 mt-0.5">{action.description}</p>
+                  <h4 className="text-sm font-semibold text-[#F3EEEC]">{action.title}</h4>
+                  <p className="text-[11px] text-[#A79B96] mt-0.5">{action.description}</p>
                 </div>
 
                 {/* Dry Run Outcome Snapshot */}
-                <div className="p-3 rounded bg-[#0d1524] border border-[#1b2a45] grid grid-cols-1 sm:grid-cols-3 gap-2 text-[11px]">
+                <div className="p-3 rounded bg-[#141211] border border-[#302A28] grid grid-cols-1 sm:grid-cols-3 gap-2 text-[11px]">
                   <div>
-                    Target: <strong className="font-mono text-slate-200">{action.targetResource}</strong>
+                    Target: <strong className="font-mono text-[#F3EEEC]">{action.targetResource}</strong>
                   </div>
                   <div>
-                    Expected Risk Reduction: <strong className="text-emerald-400 font-mono">-{action.dryRun.expectedRiskReductionPercent}%</strong>
+                    Expected Risk Reduction: <strong className="text-[#86EFAC] font-mono">-{action.dryRun.expectedRiskReductionPercent}%</strong>
                   </div>
                   <div>
-                    Estimated Blast Radius: <span className="text-slate-300">{action.dryRun.estimatedBlastRadius}</span>
+                    Estimated Blast Radius: <span className="text-[#D0C4C0]">{action.dryRun.estimatedBlastRadius}</span>
                   </div>
                 </div>
 
                 {/* Bottom Action Buttons */}
-                <div className="pt-2 border-t border-[#1b2a45]/60 flex items-center justify-between gap-3">
+                <div className="pt-2 border-t border-[#302A28] flex items-center justify-between gap-3">
                   <Link
                     href={`/incidents/${action.incidentId}`}
-                    className="text-blue-400 hover:text-blue-300 font-mono text-[11px] flex items-center gap-1"
+                    className="text-[#D0C4C0] hover:text-[#F3EEEC] font-mono text-[11px] flex items-center gap-1"
                   >
                     <span>View Linked Incident: {action.incidentId}</span>
-                    <ExternalLink className="h-3 w-3" />
+                    <ExternalLink className="h-3 w-3 text-[#A20903]" />
                   </Link>
 
                   {isPending && (
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => setInspectingAction(action)}
-                        className="px-3 py-1.5 rounded bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 border border-blue-500/40 text-xs font-semibold transition-colors flex items-center gap-1.5"
+                        className="px-3 py-1.5 rounded bg-[#1D1A19] hover:bg-[#221E1D] text-[#D0C4C0] border border-[#302A28] text-xs font-semibold transition-colors flex items-center gap-1.5"
                       >
-                        <Play className="h-3 w-3 fill-current" />
+                        <Play className="h-3 w-3 fill-current text-[#A2847B]" />
                         <span>Inspect Dry Run</span>
                       </button>
 
                       <button
                         onClick={() => handleReject(action.id)}
-                        className="px-3 py-1.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium transition-colors"
+                        className="px-3 py-1.5 rounded bg-[#141211] hover:bg-[#1D1A19] text-[#A79B96] text-xs font-medium border border-[#302A28] transition-colors"
                       >
                         Reject
                       </button>
 
                       <button
                         onClick={() => handleApprove(action.id)}
-                        className="px-3.5 py-1.5 rounded bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold text-xs transition-colors shadow-sm"
+                        className="px-3.5 py-1.5 rounded bg-[#A20903] hover:bg-[#850702] text-[#F3EEEC] font-bold text-xs transition-colors shadow-sm"
                       >
                         Approve (Simulated)
                       </button>
@@ -360,15 +360,15 @@ export function ResponseCentre({
                   )}
 
                   {isExecuted && action.executionOutcome && (
-                    <span className="text-emerald-400 font-mono text-[11px] flex items-center gap-1">
+                    <span className="text-[#86EFAC] font-mono text-[11px] flex items-center gap-1">
                       <CheckCircle2 className="h-3.5 w-3.5" />
                       <span>Simulated Execution Logged ({action.executionOutcome.auditLogId})</span>
                     </span>
                   )}
 
                   {isRejected && (
-                    <span className="text-slate-400 font-mono text-[11px] flex items-center gap-1">
-                      <XCircle className="h-3.5 w-3.5 text-slate-500" />
+                    <span className="text-[#756B67] font-mono text-[11px] flex items-center gap-1">
+                      <XCircle className="h-3.5 w-3.5 text-[#756B67]" />
                       <span>Proposal Rejected by Analyst</span>
                     </span>
                   )}

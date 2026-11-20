@@ -16,17 +16,18 @@ export function Badge({
   children,
   ...props
 }: BadgeProps) {
+  // CyFocus semantic badge styling: restrained accents, sophisticated dark surfaces
   const variantStyles: Record<string, string> = {
-    critical: 'bg-red-950/70 text-red-300 border-red-500/30',
-    error: 'bg-red-950/70 text-red-300 border-red-500/30',
-    high: 'bg-orange-950/70 text-orange-300 border-orange-500/30',
-    medium: 'bg-amber-950/70 text-amber-300 border-amber-500/30',
-    low: 'bg-sky-950/70 text-sky-300 border-sky-500/30',
-    success: 'bg-emerald-950/70 text-emerald-300 border-emerald-500/30',
-    warning: 'bg-amber-950/70 text-amber-300 border-amber-500/30',
-    info: 'bg-blue-950/70 text-blue-300 border-blue-500/30',
-    neutral: 'bg-slate-800/80 text-slate-300 border-slate-700/60',
-    outline: 'bg-transparent text-slate-400 border-slate-700',
+    critical: 'bg-[#5C1811]/40 text-[#FCA5A5] border-[#A20903]/50',
+    error: 'bg-[#5C1811]/40 text-[#FCA5A5] border-[#A20903]/50',
+    high: 'bg-[#7C2D12]/30 text-[#FDBA74] border-[#EA580C]/40',
+    medium: 'bg-[#78350F]/30 text-[#FDE047] border-[#D97706]/40',
+    low: 'bg-[#262220] text-[#D0C4C0] border-[#443C39]',
+    success: 'bg-[#26502B]/40 text-[#86EFAC] border-[#26502B]',
+    warning: 'bg-[#78350F]/30 text-[#FDE047] border-[#D97706]/40',
+    info: 'bg-[#382D2A] text-[#D0C4C0] border-[#5A4B46]',
+    neutral: 'bg-[#1D1A19] text-[#A79B96] border-[#302A28]',
+    outline: 'bg-transparent text-[#A79B96] border-[#302A28]',
   };
 
   const sizeStyles = {
@@ -48,15 +49,15 @@ export function Badge({
         <span
           className={cn(
             'inline-block h-1.5 w-1.5 rounded-full animate-pulse',
-            variant === 'critical'
-              ? 'bg-red-400'
+            variant === 'critical' || variant === 'error'
+              ? 'bg-[#A20903]'
               : variant === 'high'
-              ? 'bg-orange-400'
-              : variant === 'medium'
-              ? 'bg-amber-400'
+              ? 'bg-[#C2410C]'
+              : variant === 'medium' || variant === 'warning'
+              ? 'bg-[#D97706]'
               : variant === 'success'
-              ? 'bg-emerald-400'
-              : 'bg-blue-400'
+              ? 'bg-[#4ADE80]'
+              : 'bg-[#A79B96]'
           )}
         />
       )}

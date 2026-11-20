@@ -28,14 +28,14 @@ export function ComplianceCentre() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-[#1b2a45]">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-[#302A28]">
         <div>
           <div className="flex items-center gap-3">
-            <h2 className="text-2xl font-bold tracking-tight text-slate-100 flex items-center gap-2.5">
-              <FileCheck2 className="h-6 w-6 text-blue-400" />
+            <h2 className="text-2xl font-bold tracking-tight text-[#F3EEEC] flex items-center gap-2.5">
+              <FileCheck2 className="h-6 w-6 text-[#A20903]" />
               <span>Compliance Centre</span>
             </h2>
-            <Badge variant="info" size="sm">
+            <Badge variant="neutral" size="sm">
               GOVERNANCE
             </Badge>
             <Badge
@@ -45,36 +45,36 @@ export function ComplianceCentre() {
               {mode === 'LIVE' ? 'LIVE CONTROLS' : mode === 'ERROR' ? 'API DISCONNECTED' : 'DEMO MODE'}
             </Badge>
           </div>
-          <p className="text-xs text-slate-400 mt-1 max-w-2xl">
+          <p className="text-xs text-[#A79B96] mt-1 max-w-2xl">
             Continuous verification of DPDP-aligned readiness and controls, purpose limitation, and PCI DSS cardholder boundary posture.
           </p>
         </div>
 
         {/* Counter Pills */}
         <div className="flex items-center gap-2.5 flex-wrap">
-          <div className="bg-emerald-950/40 px-3 py-1.5 rounded-lg border border-emerald-500/40 text-xs">
-            <span className="text-emerald-300">Readiness Aligned:</span>{' '}
-            <strong className="text-emerald-200 font-mono">{alignedCount}</strong>
+          <div className="bg-[#26502B]/30 px-3 py-1.5 rounded-lg border border-[#26502B] text-xs">
+            <span className="text-[#86EFAC]">Readiness Aligned:</span>{' '}
+            <strong className="text-[#86EFAC] font-mono">{alignedCount}</strong>
           </div>
-          <div className="bg-amber-950/40 px-3 py-1.5 rounded-lg border border-amber-500/40 text-xs">
-            <span className="text-amber-300">Review Required:</span>{' '}
-            <strong className="text-amber-200 font-mono">{reviewRequiredCount}</strong>
+          <div className="bg-[#78350F]/30 px-3 py-1.5 rounded-lg border border-[#D97706]/40 text-xs">
+            <span className="text-[#FDE047]">Review Required:</span>{' '}
+            <strong className="text-[#FDE047] font-mono">{reviewRequiredCount}</strong>
           </div>
-          <div className="bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-700 text-xs">
-            <span className="text-slate-400">Partial Controls:</span>{' '}
-            <strong className="text-slate-200 font-mono">{partialCount}</strong>
+          <div className="bg-[#141211] px-3 py-1.5 rounded-lg border border-[#302A28] text-xs">
+            <span className="text-[#756B67]">Partial Controls:</span>{' '}
+            <strong className="text-[#D0C4C0] font-mono">{partialCount}</strong>
           </div>
         </div>
       </div>
 
       {/* Mandatory Language Guardrail Callout */}
-      <div className="p-4 rounded-lg bg-blue-950/20 border border-blue-500/30 text-xs text-blue-200 flex items-start gap-3">
-        <Info className="h-5 w-5 text-blue-400 shrink-0 mt-0.5" />
+      <div className="p-4 rounded-lg bg-[#141211] border border-[#302A28] text-xs text-[#D0C4C0] flex items-start gap-3">
+        <Info className="h-5 w-5 text-[#A2847B] shrink-0 mt-0.5" />
         <div className="space-y-1">
-          <strong className="font-semibold text-slate-100">
+          <strong className="font-semibold text-[#F3EEEC]">
             Governance Scope Specification: DPDP-Aligned Readiness &amp; Controls
           </strong>
-          <p className="text-slate-300 leading-relaxed text-[11px]">
+          <p className="text-[#A79B96] leading-relaxed text-[11px]">
             In strict compliance with QALA LABS governance standards, CARTGUARD AI provides <em>DPDP-aligned readiness and controls</em>. The platform does not claim full legal certification, nor does the prototype consent tracker represent a registered DPDP Consent Manager. PCI DSS controls are strictly bounded to tokenized payment interfaces.
           </p>
         </div>
@@ -85,10 +85,10 @@ export function ComplianceCentre() {
         <CardHeader>
           <div className="flex items-center justify-between w-full">
             <CardTitle>
-              <ShieldCheck className="h-4 w-4 text-emerald-400" />
+              <ShieldCheck className="h-4 w-4 text-[#4ADE80]" />
               <span>DPDP-Aligned Readiness &amp; Safeguards Status</span>
             </CardTitle>
-            <span className="text-xs text-slate-400 font-mono">5 Assessed Control Areas</span>
+            <span className="text-xs text-[#756B67] font-mono">5 Assessed Control Areas</span>
           </div>
         </CardHeader>
 
@@ -96,7 +96,7 @@ export function ComplianceCentre() {
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs border-collapse">
               <thead>
-                <tr className="border-b border-[#1b2a45] bg-[#0a0f1a] text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
+                <tr className="border-b border-[#302A28] bg-[#100E0D] text-[11px] font-semibold text-[#756B67] uppercase tracking-wider">
                   <th className="py-3 px-4">Code</th>
                   <th className="py-3 px-3">Control Name</th>
                   <th className="py-3 px-3">Readiness Status</th>
@@ -105,16 +105,16 @@ export function ComplianceCentre() {
                   <th className="py-3 px-4">Analyst Notes</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#1b2a45]/60 text-slate-300">
+              <tbody className="divide-y divide-[#302A28] text-[#D0C4C0]">
                 {controls.map((item) => (
-                  <tr key={item.id} className="hover:bg-[#121d31]/50 transition-colors">
-                    <td className="py-3 px-4 font-mono font-bold text-blue-400 whitespace-nowrap">
+                  <tr key={item.id} className="hover:bg-[#1D1A19] transition-colors">
+                    <td className="py-3 px-4 font-mono font-bold text-[#F3EEEC] whitespace-nowrap">
                       {item.sectionCode}
                     </td>
 
                     <td className="py-3 px-3">
-                      <div className="font-semibold text-slate-200">{item.name}</div>
-                      <p className="text-[11px] text-slate-400 max-w-sm mt-0.5">{item.description}</p>
+                      <div className="font-semibold text-[#F3EEEC]">{item.name}</div>
+                      <p className="text-[11px] text-[#756B67] max-w-sm mt-0.5">{item.description}</p>
                     </td>
 
                     <td className="py-3 px-3 whitespace-nowrap">
@@ -135,20 +135,20 @@ export function ComplianceCentre() {
 
                     <td className="py-3 px-3 whitespace-nowrap">
                       {item.evidenceAvailable ? (
-                        <div className="flex items-center gap-1.5 text-emerald-400 font-mono text-[11px]">
-                          <ShieldCheck className="h-3.5 w-3.5" />
+                        <div className="flex items-center gap-1.5 text-[#86EFAC] font-mono text-[11px]">
+                          <ShieldCheck className="h-3.5 w-3.5 text-[#4ADE80]" />
                           <span>{item.evidenceRef}</span>
                         </div>
                       ) : (
-                        <span className="text-slate-500 font-mono text-[11px] italic">In Testing</span>
+                        <span className="text-[#756B67] font-mono text-[11px] italic">In Testing</span>
                       )}
                     </td>
 
-                    <td className="py-3 px-3 font-mono text-[11px] text-slate-400 whitespace-nowrap">
+                    <td className="py-3 px-3 font-mono text-[11px] text-[#756B67] whitespace-nowrap">
                       {item.auditFrequency}
                     </td>
 
-                    <td className="py-3 px-4 text-[11px] text-slate-400">
+                    <td className="py-3 px-4 text-[11px] text-[#756B67]">
                       {item.notes}
                     </td>
                   </tr>
@@ -163,7 +163,7 @@ export function ComplianceCentre() {
       <Card>
         <CardHeader>
           <CardTitle>
-            <Lock className="h-4 w-4 text-amber-400" />
+            <Lock className="h-4 w-4 text-[#D97706]" />
             <span>PCI DSS Scope Boundaries &amp; Cardholder Data Isolation</span>
           </CardTitle>
         </CardHeader>
@@ -173,10 +173,10 @@ export function ComplianceCentre() {
             {pciControls.map((pci, i) => (
               <div
                 key={i}
-                className="p-3.5 rounded-lg bg-[#090e17] border border-[#1b2a45] space-y-2 text-xs"
+                className="p-3.5 rounded-lg bg-[#100E0D] border border-[#302A28] space-y-2 text-xs"
               >
                 <div className="flex items-start justify-between gap-2">
-                  <span className="font-semibold text-slate-200">{pci.requirement}</span>
+                  <span className="font-semibold text-[#F3EEEC]">{pci.requirement}</span>
                   <Badge
                     variant={pci.scopeStatus === 'OUT_OF_SCOPE' ? 'neutral' : 'info'}
                     size="sm"
@@ -184,8 +184,8 @@ export function ComplianceCentre() {
                     {pci.scopeStatus.replace(/_/g, ' ')}
                   </Badge>
                 </div>
-                <p className="text-[11px] text-slate-400 leading-relaxed">{pci.description}</p>
-                <div className="pt-2 border-t border-[#1b2a45]/60 flex items-center justify-between text-[10px] text-slate-500 font-mono">
+                <p className="text-[11px] text-[#A79B96] leading-relaxed">{pci.description}</p>
+                <div className="pt-2 border-t border-[#302A28] flex items-center justify-between text-[10px] text-[#756B67] font-mono">
                   <span>Tamper Shield: {pci.tamperProtectionActive ? 'ACTIVE' : 'INACTIVE'}</span>
                   <span>{formatDateTime(pci.lastVerification)}</span>
                 </div>
@@ -200,15 +200,15 @@ export function ComplianceCentre() {
         <CardHeader>
           <div className="flex items-center justify-between w-full">
             <CardTitle>
-              <Layers className="h-4 w-4 text-cyan-400" />
+              <Layers className="h-4 w-4 text-[#A20903]" />
               <span>Personal Data Categories &amp; Cryptographic Storage Posture</span>
             </CardTitle>
             <Link
               href="/governance/privacy"
-              className="text-xs text-blue-400 hover:text-blue-300 font-medium flex items-center gap-1"
+              className="text-xs text-[#D0C4C0] hover:text-[#F3EEEC] font-medium flex items-center gap-1"
             >
               <span>View Privacy Centre</span>
-              <ArrowRight className="h-3.5 w-3.5" />
+              <ArrowRight className="h-3.5 w-3.5 text-[#A20903]" />
             </Link>
           </div>
         </CardHeader>
@@ -217,18 +217,18 @@ export function ComplianceCentre() {
           {dataCategories.map((cat, i) => (
             <div
               key={i}
-              className="p-3 rounded-lg bg-[#090e17] border border-[#1b2a45] space-y-1.5 text-xs"
+              className="p-3 rounded-lg bg-[#100E0D] border border-[#302A28] space-y-1.5 text-xs"
             >
               <div className="flex items-center justify-between">
-                <span className="font-semibold text-slate-200">{cat.category}</span>
+                <span className="font-semibold text-[#F3EEEC]">{cat.category}</span>
                 <Badge variant={cat.sensitivity === 'HIGH_PII' ? 'critical' : 'info'} size="sm">
                   {cat.sensitivity}
                 </Badge>
               </div>
-              <p className="text-[11px] text-slate-400 font-mono">
+              <p className="text-[11px] text-[#756B67] font-mono">
                 {cat.fields.join(', ')}
               </p>
-              <div className="pt-2 border-t border-[#1b2a45]/60 flex items-center justify-between text-[10px] text-slate-500 font-mono">
+              <div className="pt-2 border-t border-[#302A28] flex items-center justify-between text-[10px] text-[#756B67] font-mono">
                 <span>{cat.encryptionStatus}</span>
                 <span>{cat.retentionPeriod.split(' ')[0]} {cat.retentionPeriod.split(' ')[1]}</span>
               </div>

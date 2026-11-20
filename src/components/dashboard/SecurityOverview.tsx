@@ -36,15 +36,15 @@ export function SecurityOverview() {
   if (isLoading && !data) {
     return (
       <div className="space-y-6 animate-pulse">
-        <div className="h-10 bg-[#0d1524] rounded-lg w-1/3" />
+        <div className="h-10 bg-[#141211] rounded-lg w-1/3" />
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
           {[...Array(5)].map((_, i) => (
-            <div key={i} className="h-28 bg-[#0d1524] rounded-xl border border-[#1b2a45]" />
+            <div key={i} className="h-28 bg-[#141211] rounded-xl border border-[#302A28]" />
           ))}
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-          <div className="lg:col-span-2 h-64 bg-[#0d1524] rounded-xl border border-[#1b2a45]" />
-          <div className="h-64 bg-[#0d1524] rounded-xl border border-[#1b2a45]" />
+          <div className="lg:col-span-2 h-64 bg-[#141211] rounded-xl border border-[#302A28]" />
+          <div className="h-64 bg-[#141211] rounded-xl border border-[#302A28]" />
         </div>
       </div>
     );
@@ -57,14 +57,14 @@ export function SecurityOverview() {
     <div className="space-y-6">
       {/* Error state if in LIVE mode with backend failure */}
       {error && mode === 'ERROR' && (
-        <div className="p-4 bg-red-950/40 border border-red-500/40 rounded-xl flex items-center justify-between text-xs text-red-200">
+        <div className="p-4 bg-[#5C1811]/30 border border-[#A20903]/40 rounded-xl flex items-center justify-between text-xs text-[#FCA5A5]">
           <div className="flex items-center gap-2">
-            <AlertCircle className="h-4 w-4 text-red-400 shrink-0" />
+            <AlertCircle className="h-4 w-4 text-[#A20903] shrink-0" />
             <span>{error}</span>
           </div>
           <button
             onClick={() => refetch()}
-            className="px-3 py-1 bg-red-600 hover:bg-red-500 text-white font-medium rounded-md"
+            className="px-3 py-1 bg-[#A20903] hover:bg-[#850702] text-[#F3EEEC] font-medium rounded-md"
           >
             Retry Connection
           </button>
@@ -72,65 +72,65 @@ export function SecurityOverview() {
       )}
       {/* Simulation Banner Notification with End-to-End Demo Journey Links */}
       {simulationBanner && (
-        <div className="p-4 bg-gradient-to-r from-blue-950/60 via-[#0d1524] to-[#0d1524] border border-blue-500/50 rounded-xl space-y-3 animate-in fade-in-50">
-          <div className="flex items-center justify-between gap-3 text-xs text-blue-200">
+        <div className="p-4 bg-[#141211] border border-[#A20903]/50 rounded-xl space-y-3 animate-in fade-in-50">
+          <div className="flex items-center justify-between gap-3 text-xs text-[#F3EEEC]">
             <div className="flex items-center gap-2">
-              <Sparkles className="h-4 w-4 text-cyan-400 shrink-0" />
+              <Sparkles className="h-4 w-4 text-[#FCA5A5] shrink-0" />
               <span className="font-semibold">{simulationBanner}</span>
             </div>
             <button
               onClick={() => setSimulationBanner(null)}
-              className="p-1 hover:bg-blue-900/40 rounded text-slate-400 hover:text-white"
+              className="p-1 hover:bg-[#1D1A19] rounded text-[#756B67] hover:text-[#F3EEEC]"
             >
               <X className="h-3.5 w-3.5" />
             </button>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2 text-xs pt-1 border-t border-blue-500/20">
-            <span className="text-slate-400 font-semibold text-[11px] mr-1">Demo Journey Path:</span>
+          <div className="flex flex-wrap items-center gap-2 text-xs pt-1 border-t border-[#302A28]">
+            <span className="text-[#756B67] font-semibold text-[11px] mr-1">Demo Journey Path:</span>
             <Link
               href="/threats/live"
-              className="px-2.5 py-1 rounded bg-[#090e17] hover:bg-slate-800 text-slate-200 border border-[#1b2a45] hover:border-blue-500/50 flex items-center gap-1 transition-colors"
+              className="px-2.5 py-1 rounded bg-[#1D1A19] hover:bg-[#221E1D] text-[#D0C4C0] border border-[#302A28] hover:border-[#4D4440] flex items-center gap-1.5 transition-colors"
             >
-              <Radio className="h-3 w-3 text-emerald-400" />
+              <Radio className="h-3 w-3 text-[#4ADE80]" />
               <span>1. Live Signals</span>
             </Link>
-            <span className="text-slate-600">&rarr;</span>
+            <span className="text-[#756B67]">&rarr;</span>
             <Link
               href="/incidents/INC-2026-0841"
-              className="px-2.5 py-1 rounded bg-[#090e17] hover:bg-slate-800 text-slate-200 border border-[#1b2a45] hover:border-red-500/50 flex items-center gap-1 transition-colors"
+              className="px-2.5 py-1 rounded bg-[#1D1A19] hover:bg-[#221E1D] text-[#D0C4C0] border border-[#302A28] hover:border-[#A20903]/50 flex items-center gap-1.5 transition-colors"
             >
-              <ShieldAlert className="h-3 w-3 text-red-400" />
+              <ShieldAlert className="h-3 w-3 text-[#A20903]" />
               <span>2. Incident Dossier</span>
             </Link>
-            <span className="text-slate-600">&rarr;</span>
+            <span className="text-[#756B67]">&rarr;</span>
             <Link
               href="/investigate?incidentId=INC-2026-0841"
-              className="px-2.5 py-1 rounded bg-[#090e17] hover:bg-slate-800 text-slate-200 border border-[#1b2a45] hover:border-cyan-500/50 flex items-center gap-1 transition-colors"
+              className="px-2.5 py-1 rounded bg-[#1D1A19] hover:bg-[#221E1D] text-[#D0C4C0] border border-[#302A28] hover:border-[#4D4440] flex items-center gap-1.5 transition-colors"
             >
-              <Sparkles className="h-3 w-3 text-cyan-400" />
+              <Sparkles className="h-3 w-3 text-[#A2847B]" />
               <span>3. AI Investigation</span>
             </Link>
-            <span className="text-slate-600">&rarr;</span>
+            <span className="text-[#756B67]">&rarr;</span>
             <Link
               href="/operations/response"
-              className="px-2.5 py-1 rounded bg-[#090e17] hover:bg-slate-800 text-slate-200 border border-[#1b2a45] hover:border-amber-500/50 flex items-center gap-1 transition-colors"
+              className="px-2.5 py-1 rounded bg-[#1D1A19] hover:bg-[#221E1D] text-[#D0C4C0] border border-[#302A28] hover:border-[#4D4440] flex items-center gap-1.5 transition-colors"
             >
-              <ShieldCheck className="h-3 w-3 text-amber-400" />
+              <ShieldCheck className="h-3 w-3 text-[#D97706]" />
               <span>4. Human Approval</span>
             </Link>
-            <span className="text-slate-600">&rarr;</span>
+            <span className="text-[#756B67]">&rarr;</span>
             <Link
               href="/identity/agents?highlightTx=tx-agent-2026-8804"
-              className="px-2.5 py-1 rounded bg-[#090e17] hover:bg-slate-800 text-slate-200 border border-[#1b2a45] hover:border-purple-500/50 flex items-center gap-1 transition-colors"
+              className="px-2.5 py-1 rounded bg-[#1D1A19] hover:bg-[#221E1D] text-[#D0C4C0] border border-[#302A28] hover:border-[#4D4440] flex items-center gap-1.5 transition-colors"
             >
-              <Bot className="h-3 w-3 text-purple-400" />
+              <Bot className="h-3 w-3 text-[#A2847B]" />
               <span>5. Agent Verification (R8)</span>
             </Link>
-            <span className="text-slate-600">&rarr;</span>
+            <span className="text-[#756B67]">&rarr;</span>
             <Link
               href="/operations/response#audit-trail"
-              className="px-2.5 py-1 rounded bg-amber-600/20 hover:bg-amber-600/30 text-amber-300 border border-amber-500/40 flex items-center gap-1 font-semibold transition-colors"
+              className="px-2.5 py-1 rounded bg-[#5C1811]/30 hover:bg-[#5C1811]/50 text-[#FCA5A5] border border-[#A20903]/40 flex items-center gap-1 font-semibold transition-colors"
             >
               <span>6. Audit Ledger</span>
               <ArrowRight className="h-3 w-3" />
@@ -140,35 +140,35 @@ export function SecurityOverview() {
       )}
 
       {/* Top Section */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-[#1b2a45]">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-[#302A28]">
         <div>
           <div className="flex items-center gap-3">
-            <h2 className="text-2xl font-bold tracking-tight text-slate-100">
+            <h2 className="text-2xl font-bold tracking-tight text-[#F3EEEC]">
               Security Overview
             </h2>
             <Badge
-              variant={mode === 'LIVE' ? 'success' : mode === 'ERROR' ? 'error' : 'info'}
+              variant={mode === 'LIVE' ? 'success' : mode === 'ERROR' ? 'error' : 'neutral'}
               size="sm"
               pulse={mode === 'LIVE'}
             >
               {mode === 'LIVE' ? 'LIVE DATA' : mode === 'ERROR' ? 'API DISCONNECTED' : 'DEMO MODE'}
             </Badge>
           </div>
-          <p className="text-xs text-slate-400 mt-1 max-w-2xl leading-relaxed">
+          <p className="text-xs text-[#A79B96] mt-1 max-w-2xl leading-relaxed">
             Monitor threats, investigate suspicious activity and protect customer data across your e-commerce ecosystem.
           </p>
         </div>
 
         {/* Right Action Bar */}
         <div className="flex items-center gap-3 flex-wrap">
-          <div className="flex items-center gap-2 text-xs text-slate-400 bg-[#0d1524] px-3 py-1.5 rounded-md border border-[#1b2a45] font-mono">
-            <RefreshCw className="h-3 w-3 text-slate-400" />
+          <div className="flex items-center gap-2 text-xs text-[#756B67] bg-[#141211] px-3 py-1.5 rounded-md border border-[#302A28] font-mono">
+            <RefreshCw className="h-3 w-3 text-[#756B67]" />
             <span>Updated: {formatTimestamp(summary.environment.lastUpdated)} UTC</span>
           </div>
 
           <button
             onClick={handleSimulateAttack}
-            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-md bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white text-xs font-semibold shadow-md transition-all duration-150 active:scale-95 cursor-pointer"
+            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-md bg-[#A20903] hover:bg-[#850702] text-[#F3EEEC] text-xs font-semibold shadow-md transition-all duration-150 active:scale-95 cursor-pointer"
           >
             <Play className="h-3.5 w-3.5 fill-current" />
             <span>Simulate Attack (Demo)</span>
@@ -213,39 +213,39 @@ export function SecurityOverview() {
 
       {/* Simulate Attack Modal */}
       {showSimulateModal && (
-        <div className="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-[#0d1524] border border-[#1b2a45] rounded-xl max-w-lg w-full p-6 shadow-2xl space-y-4">
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-[#141211] border border-[#302A28] rounded-xl max-w-lg w-full p-6 shadow-2xl space-y-4">
             <div className="flex items-start justify-between">
               <div className="flex items-center gap-2.5">
-                <div className="p-2 rounded-lg bg-blue-600/20 text-blue-400 border border-blue-500/30">
+                <div className="p-2 rounded-lg bg-[#1D1A19] text-[#A20903] border border-[#302A28]">
                   <Play className="h-5 w-5 fill-current" />
                 </div>
                 <div>
-                  <h3 className="text-base font-bold text-slate-100">
+                  <h3 className="text-base font-bold text-[#F3EEEC]">
                     Simulate Attack Scenario
                   </h3>
-                  <p className="text-xs text-slate-400">
+                  <p className="text-xs text-[#A79B96]">
                     Synthetic attack replay for SOC verification and demonstration
                   </p>
                 </div>
               </div>
               <button
                 onClick={() => setShowSimulateModal(false)}
-                className="text-slate-400 hover:text-white p-1 rounded"
+                className="text-[#756B67] hover:text-[#F3EEEC] p-1 rounded"
               >
                 <X className="h-4 w-4" />
               </button>
             </div>
 
-            <div className="p-3 bg-amber-950/20 border border-amber-500/30 rounded-lg text-xs text-amber-300 flex items-start gap-2">
-              <AlertCircle className="h-4 w-4 shrink-0 mt-0.5 text-amber-400" />
+            <div className="p-3 bg-[#1D1A19] border border-[#302A28] rounded-lg text-xs text-[#D0C4C0] flex items-start gap-2">
+              <AlertCircle className="h-4 w-4 shrink-0 mt-0.5 text-[#D97706]" />
               <span>
-                <strong>Demo Safe Replay:</strong> This control will simulate high-fidelity synthetic telemetry in the local SOC without performing any real network or infrastructure attacks.
+                <strong className="text-[#F3EEEC]">Demo Safe Replay:</strong> This control will simulate high-fidelity synthetic telemetry in the local SOC without performing any real network or infrastructure attacks.
               </span>
             </div>
 
             <div className="space-y-2">
-              <p className="text-xs font-semibold text-slate-300 uppercase tracking-wider">
+              <p className="text-xs font-semibold text-[#A79B96] uppercase tracking-wider">
                 Select Scenario Replay:
               </p>
 
@@ -253,16 +253,16 @@ export function SecurityOverview() {
                 onClick={() =>
                   handleTriggerReplay('Account Takeover + High-Volume Order API Scraping')
                 }
-                className="w-full text-left p-3 rounded-lg bg-[#121d31] hover:bg-[#17253d] border border-red-500/30 transition-all group"
+                className="w-full text-left p-3 rounded-lg bg-[#1D1A19] hover:bg-[#221E1D] border border-[#A20903]/40 transition-all group"
               >
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-red-300 group-hover:text-red-200">
-                    Primary P0: Account Takeover & Order History Exfiltration
+                  <span className="text-xs font-bold text-[#FCA5A5] group-hover:text-white">
+                    Primary P0: Account Takeover &amp; Order History Exfiltration
                   </span>
                   <Badge variant="critical" size="sm">P0 Demo</Badge>
                 </div>
-                <p className="text-[11px] text-slate-400 mt-1">
-                  7 credential stuffing attempts → login from RO → shipping address change → 420 order pagination calls dumping 4,520 records.
+                <p className="text-[11px] text-[#A79B96] mt-1">
+                  7 credential stuffing attempts &rarr; login from RO &rarr; shipping address change &rarr; 420 order pagination calls dumping 4,520 records.
                 </p>
               </button>
 
@@ -270,15 +270,15 @@ export function SecurityOverview() {
                 onClick={() =>
                   handleTriggerReplay('Carding Velocity Attack on Checkout')
                 }
-                className="w-full text-left p-3 rounded-lg bg-[#121d31] hover:bg-[#17253d] border border-orange-500/30 transition-all group"
+                className="w-full text-left p-3 rounded-lg bg-[#1D1A19] hover:bg-[#221E1D] border border-[#C2410C]/40 transition-all group"
               >
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-orange-300 group-hover:text-orange-200">
-                    Scenario 2: Distributed Carding Attack & Velocity Spike
+                  <span className="text-xs font-bold text-[#FDBA74] group-hover:text-white">
+                    Scenario 2: Distributed Carding Attack &amp; Velocity Spike
                   </span>
                   <Badge variant="high" size="sm">PCI Scope</Badge>
                 </div>
-                <p className="text-[11px] text-slate-400 mt-1">
+                <p className="text-[11px] text-[#A79B96] mt-1">
                   16 rapid card authorization declines with rotating BIN prefixes from proxy exit nodes.
                 </p>
               </button>
@@ -287,25 +287,25 @@ export function SecurityOverview() {
                 onClick={() =>
                   handleTriggerReplay('Third-Party Seller API Scope Violation')
                 }
-                className="w-full text-left p-3 rounded-lg bg-[#121d31] hover:bg-[#17253d] border border-[#1b2a45] transition-all group"
+                className="w-full text-left p-3 rounded-lg bg-[#1D1A19] hover:bg-[#221E1D] border border-[#302A28] transition-all group"
               >
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-slate-200 group-hover:text-white">
+                  <span className="text-xs font-bold text-[#D0C4C0] group-hover:text-white">
                     Scenario 3: Partner API Token Scope Abuse
                   </span>
                   <Badge variant="neutral" size="sm">Vendor Sec</Badge>
                 </div>
-                <p className="text-[11px] text-slate-400 mt-1">
+                <p className="text-[11px] text-[#A79B96] mt-1">
                   Expired merchant token attempting cross-tenant pricing overrides with 88 repeated 403 responses.
                 </p>
               </button>
             </div>
 
-            <div className="flex items-center justify-between pt-2 border-t border-[#1b2a45]">
+            <div className="flex items-center justify-between pt-2 border-t border-[#302A28]">
               <Link
                 href="/threats/live"
                 onClick={() => setShowSimulateModal(false)}
-                className="px-3.5 py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold rounded-lg flex items-center gap-1.5 transition-colors shadow-sm"
+                className="px-3.5 py-2 bg-[#A20903] hover:bg-[#850702] text-[#F3EEEC] text-xs font-semibold rounded-lg flex items-center gap-1.5 transition-colors shadow-sm"
               >
                 <span>Launch Live Feed Demo</span>
                 <ArrowRight className="h-3.5 w-3.5" />
@@ -313,7 +313,7 @@ export function SecurityOverview() {
 
               <button
                 onClick={() => setShowSimulateModal(false)}
-                className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium rounded-lg"
+                className="px-4 py-2 bg-[#1D1A19] hover:bg-[#221E1D] text-[#A79B96] text-xs font-medium rounded-lg border border-[#302A28]"
               >
                 Close
               </button>

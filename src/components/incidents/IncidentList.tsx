@@ -88,14 +88,14 @@ export function IncidentList({ initialIncidents }: IncidentListProps) {
   return (
     <div className="space-y-6">
       {/* Page Header */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-[#1b2a45]">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-[#302A28]">
         <div>
           <div className="flex items-center gap-3">
-            <h2 className="text-2xl font-bold tracking-tight text-slate-100 flex items-center gap-2.5">
-              <FileWarning className="h-6 w-6 text-red-400" />
+            <h2 className="text-2xl font-bold tracking-tight text-[#F3EEEC] flex items-center gap-2.5">
+              <FileWarning className="h-6 w-6 text-[#A20903]" />
               <span>Incident Management</span>
             </h2>
-            <Badge variant="info" size="sm">
+            <Badge variant="neutral" size="sm">
               SOC TRIAGE
             </Badge>
             <Badge
@@ -105,34 +105,34 @@ export function IncidentList({ initialIncidents }: IncidentListProps) {
               {mode === 'LIVE' ? 'LIVE DATA' : mode === 'ERROR' ? 'API DISCONNECTED' : 'DEMO MODE'}
             </Badge>
           </div>
-          <p className="text-xs text-slate-400 mt-1 max-w-2xl">
+          <p className="text-xs text-[#A79B96] mt-1 max-w-2xl">
             Investigate, prioritize and track correlated security incidents across your e-commerce ecosystem.
           </p>
         </div>
 
         {/* Header Summary Counter Cards */}
         <div className="flex items-center gap-3 flex-wrap">
-          <div className="flex items-center gap-2 bg-[#0d1524] px-3 py-1.5 rounded-lg border border-[#1b2a45] text-xs">
-            <span className="text-slate-400 font-medium">Total:</span>
-            <span className="font-mono font-bold text-slate-100">{totalCount}</span>
+          <div className="flex items-center gap-2 bg-[#141211] px-3 py-1.5 rounded-lg border border-[#302A28] text-xs">
+            <span className="text-[#756B67] font-medium">Total:</span>
+            <span className="font-mono font-bold text-[#F3EEEC]">{totalCount}</span>
           </div>
 
-          <div className="flex items-center gap-2 bg-red-950/40 px-3 py-1.5 rounded-lg border border-red-500/40 text-xs">
-            <ShieldAlert className="h-3.5 w-3.5 text-red-400" />
-            <span className="text-red-300 font-medium">Critical P0:</span>
-            <span className="font-mono font-bold text-red-200">{criticalCount}</span>
+          <div className="flex items-center gap-2 bg-[#5C1811]/30 px-3 py-1.5 rounded-lg border border-[#A20903]/40 text-xs">
+            <ShieldAlert className="h-3.5 w-3.5 text-[#A20903]" />
+            <span className="text-[#FCA5A5] font-medium">Critical P0:</span>
+            <span className="font-mono font-bold text-[#F3EEEC]">{criticalCount}</span>
           </div>
 
-          <div className="flex items-center gap-2 bg-orange-950/40 px-3 py-1.5 rounded-lg border border-orange-500/40 text-xs">
-            <AlertTriangle className="h-3.5 w-3.5 text-orange-400" />
-            <span className="text-orange-300 font-medium">High:</span>
-            <span className="font-mono font-bold text-orange-200">{highCount}</span>
+          <div className="flex items-center gap-2 bg-[#7C2D12]/30 px-3 py-1.5 rounded-lg border border-[#C2410C]/40 text-xs">
+            <AlertTriangle className="h-3.5 w-3.5 text-[#C2410C]" />
+            <span className="text-[#FDBA74] font-medium">High:</span>
+            <span className="font-mono font-bold text-[#F3EEEC]">{highCount}</span>
           </div>
 
-          <div className="flex items-center gap-2 bg-amber-950/40 px-3 py-1.5 rounded-lg border border-amber-500/40 text-xs">
-            <UserCheck className="h-3.5 w-3.5 text-amber-400" />
-            <span className="text-amber-300 font-medium">Pending Approval:</span>
-            <span className="font-mono font-bold text-amber-200">{pendingApprovalCount}</span>
+          <div className="flex items-center gap-2 bg-[#78350F]/30 px-3 py-1.5 rounded-lg border border-[#D97706]/40 text-xs">
+            <UserCheck className="h-3.5 w-3.5 text-[#D97706]" />
+            <span className="text-[#FDE047] font-medium">Pending Approval:</span>
+            <span className="font-mono font-bold text-[#F3EEEC]">{pendingApprovalCount}</span>
           </div>
         </div>
       </div>
@@ -146,13 +146,13 @@ export function IncidentList({ initialIncidents }: IncidentListProps) {
       />
 
       {/* Filter status line */}
-      <div className="flex items-center justify-between text-xs text-slate-400 px-1">
+      <div className="flex items-center justify-between text-xs text-[#756B67] px-1">
         <span>
-          Showing <strong className="text-slate-200">{filteredIncidents.length}</strong> of{' '}
-          <strong className="text-slate-200">{totalCount}</strong> correlated incidents
+          Showing <strong className="text-[#D0C4C0]">{filteredIncidents.length}</strong> of{' '}
+          <strong className="text-[#D0C4C0]">{totalCount}</strong> correlated incidents
         </span>
         {hasActiveFilters && (
-          <span className="text-[11px] text-blue-400">Filters applied</span>
+          <span className="text-[11px] text-[#A2847B]">Filters applied</span>
         )}
       </div>
 

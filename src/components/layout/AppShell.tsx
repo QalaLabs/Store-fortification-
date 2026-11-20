@@ -14,7 +14,7 @@ export function AppShell({ children }: AppShellProps) {
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-[#080d16] text-slate-100 flex flex-col antialiased selection:bg-blue-600/30 selection:text-blue-200">
+    <div className="min-h-screen bg-[#070505] text-[#F3EEEC] flex flex-col antialiased selection:bg-[#A20903]/30 selection:text-[#F3EEEC]">
       {/* Sidebar (Desktop and Mobile drawer) */}
       <Sidebar
         isCollapsed={isCollapsed}
@@ -42,11 +42,11 @@ export function AppShell({ children }: AppShellProps) {
         </main>
 
         {/* Global Footer */}
-        <footer className="px-6 py-4 border-t border-[#1b2a45]/40 text-center text-xs text-slate-500 bg-[#080d16]">
+        <footer className="px-6 py-4 border-t border-[#302A28] text-center text-xs text-[#756B67] bg-[#070505]">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-2 max-w-7xl mx-auto">
-            <span>CARTGUARD AI • QALA LABS E-Commerce Security Platform</span>
-            <span className="font-mono text-[11px] text-slate-400">
-              Demo Environment • Local Fixtures Active • Ready for Ingestion APIs
+            <span>CARTGUARD AI • QALA LABS Security Operations Centre</span>
+            <span className="font-mono text-[11px] text-[#A79B96]">
+              CyFocus SOC Platform • Continuous Telemetry • R1–R8 Guardrails Active
             </span>
           </div>
         </footer>

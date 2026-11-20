@@ -38,15 +38,15 @@ export function IncidentTimeline({ incident, allEvents }: IncidentTimelineProps)
         <div className="flex items-center justify-between w-full">
           <div>
             <CardTitle>
-              <Clock className="h-4 w-4 text-cyan-400" />
-              <span>Attack Timeline & Correlated Security Events</span>
+              <Clock className="h-4 w-4 text-[#A20903]" />
+              <span>Attack Timeline &amp; Correlated Security Events</span>
             </CardTitle>
-            <p className="text-xs text-slate-400 mt-1">
+            <p className="text-xs text-[#A79B96] mt-1">
               Chronological sequence of verified raw events comprising this correlated incident
             </p>
           </div>
 
-          <span className="text-xs text-slate-400 font-mono bg-[#090e17] px-2.5 py-1 rounded border border-[#1b2a45]">
+          <span className="text-xs text-[#756B67] font-mono bg-[#100E0D] px-2.5 py-1 rounded border border-[#302A28]">
             {linkedEvents.length} Verified Events
           </span>
         </div>
@@ -54,7 +54,7 @@ export function IncidentTimeline({ incident, allEvents }: IncidentTimelineProps)
 
       <CardContent className="space-y-4">
         {/* Timeline Items */}
-        <div className="relative pl-6 space-y-4 before:absolute before:left-2 before:top-2 before:bottom-2 before:w-0.5 before:bg-[#1b2a45]">
+        <div className="relative pl-6 space-y-4 before:absolute before:left-2 before:top-2 before:bottom-2 before:w-0.5 before:bg-[#302A28]">
           {linkedEvents.map((evt, idx) => {
             const isExpanded = expandedEventId === evt.id;
             const isP0 = evt.severity === 'critical';
@@ -63,14 +63,14 @@ export function IncidentTimeline({ incident, allEvents }: IncidentTimelineProps)
               <div key={evt.id} className="relative group">
                 {/* Timeline node dot */}
                 <div
-                  className={`absolute -left-6 top-1.5 h-3.5 w-3.5 rounded-full border-2 bg-[#0d1524] transition-colors ${
+                  className={`absolute -left-6 top-1.5 h-3.5 w-3.5 rounded-full border-2 bg-[#141211] transition-colors ${
                     isP0
-                      ? 'border-red-500 bg-red-950'
+                      ? 'border-[#A20903] bg-[#5C1811]'
                       : evt.severity === 'high'
-                      ? 'border-orange-500 bg-orange-950'
+                      ? 'border-[#C2410C] bg-[#7C2D12]'
                       : evt.severity === 'medium'
-                      ? 'border-amber-500 bg-amber-950'
-                      : 'border-blue-500 bg-blue-950'
+                      ? 'border-[#D97706] bg-[#78350F]'
+                      : 'border-[#302A28] bg-[#1D1A19]'
                   }`}
                 />
 
@@ -78,8 +78,8 @@ export function IncidentTimeline({ incident, allEvents }: IncidentTimelineProps)
                 <div
                   className={`p-3.5 rounded-lg border transition-all ${
                     isExpanded
-                      ? 'bg-[#121d31] border-blue-500/50 shadow-md'
-                      : 'bg-[#090e17] border-[#1b2a45] hover:border-slate-600'
+                      ? 'bg-[#1D1A19] border-[#A20903]/60 shadow-md'
+                      : 'bg-[#100E0D] border-[#302A28] hover:border-[#4D4440]'
                   }`}
                 >
                   <div
@@ -87,72 +87,72 @@ export function IncidentTimeline({ incident, allEvents }: IncidentTimelineProps)
                     onClick={() => setExpandedEventId(isExpanded ? null : evt.id)}
                   >
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span className="font-mono text-xs font-bold text-blue-400">
+                      <span className="font-mono text-xs font-bold text-[#F3EEEC]">
                         {evt.id}
                       </span>
                       <Badge variant={evt.severity} size="sm">
                         {evt.severity}
                       </Badge>
-                      <span className="text-xs font-semibold text-slate-200">
+                      <span className="text-xs font-semibold text-[#F3EEEC]">
                         {evt.eventType.replace(/_/g, ' ')}
                       </span>
-                      <span className="text-[11px] font-mono text-slate-400">
+                      <span className="text-[11px] font-mono text-[#756B67]">
                         ({evt.source})
                       </span>
                     </div>
 
-                    <div className="flex items-center gap-3 text-xs text-slate-400 font-mono">
+                    <div className="flex items-center gap-3 text-xs text-[#756B67] font-mono">
                       <span>{formatDateTime(evt.timestamp)}</span>
                       {isExpanded ? (
-                        <ChevronUp className="h-4 w-4 text-slate-400" />
+                        <ChevronUp className="h-4 w-4 text-[#756B67]" />
                       ) : (
-                        <ChevronDown className="h-4 w-4 text-slate-400" />
+                        <ChevronDown className="h-4 w-4 text-[#756B67]" />
                       )}
                     </div>
                   </div>
 
                   {/* Summary row */}
-                  <div className="mt-2 text-xs text-slate-300 flex flex-wrap items-center gap-3">
-                    <span className="flex items-center gap-1 font-mono text-slate-400">
-                      <Globe className="h-3 w-3 text-slate-500" />
+                  <div className="mt-2 text-xs text-[#A79B96] flex flex-wrap items-center gap-3">
+                    <span className="flex items-center gap-1 font-mono text-[#756B67]">
+                      <Globe className="h-3 w-3 text-[#756B67]" />
                       <span>{evt.sourceIp}</span>
                       {evt.geoCountry && <span>({evt.geoCountry})</span>}
                     </span>
 
-                    <span className="font-mono text-slate-400">
-                      <strong className="text-slate-300">{evt.httpMethod}</strong> {evt.endpoint}
+                    <span className="font-mono text-[#756B67]">
+                      <strong className="text-[#D0C4C0]">{evt.httpMethod}</strong> {evt.endpoint}
                     </span>
 
                     <span
                       className={`text-[10px] font-mono px-1.5 py-0.2 rounded font-bold ${
                         evt.responseStatus === 200
-                          ? 'bg-emerald-950 text-emerald-300 border border-emerald-500/30'
-                          : 'bg-amber-950 text-amber-300 border border-amber-500/30'
+                          ? 'bg-[#26502B]/30 text-[#86EFAC] border border-[#26502B]'
+                          : 'bg-[#78350F]/30 text-[#FDE047] border border-[#D97706]/40'
                       }`}
                     >
                       Status: {evt.responseStatus}
                     </span>
 
                     {evt.recordCount > 0 && (
-                      <span className="text-[11px] font-mono text-slate-400">
+                      <span className="text-[11px] font-mono text-[#756B67]">
                         Records: {evt.recordCount.toLocaleString()}
                       </span>
                     )}
                   </div>
 
                   {evt.description && (
-                    <p className="text-[11px] text-slate-400 mt-2 bg-[#0d1524] p-2 rounded border border-[#1b2a45]">
+                    <p className="text-[11px] text-[#A79B96] mt-2 bg-[#141211] p-2 rounded border border-[#302A28]">
                       {evt.description}
                     </p>
                   )}
 
                   {/* Expanded JSON / Metadata drawer */}
                   {isExpanded && (
-                    <div className="mt-3 pt-3 border-t border-[#1b2a45] space-y-2">
-                      <span className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider block">
+                    <div className="mt-3 pt-3 border-t border-[#302A28] space-y-2">
+                      <span className="text-[10px] font-semibold text-[#756B67] uppercase tracking-wider block">
                         Raw Event Telemetry Metadata
                       </span>
-                      <pre className="text-[11px] font-mono bg-[#05080f] p-3 rounded border border-slate-800 text-slate-300 overflow-x-auto leading-relaxed">
+                      <pre className="text-[11px] font-mono bg-[#141211] p-3 rounded border border-[#302A28] text-[#D0C4C0] overflow-x-auto leading-relaxed">
                         {JSON.stringify(
                           {
                             id: evt.id,

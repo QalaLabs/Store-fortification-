@@ -56,14 +56,14 @@ export function InvestigationWorkspace({
   return (
     <div className="space-y-6">
       {/* Workspace Header */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-[#1b2a45]">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-4 border-b border-[#302A28]">
         <div>
           <div className="flex items-center gap-3">
-            <h2 className="text-2xl font-bold tracking-tight text-slate-100 flex items-center gap-2.5">
-              <Sparkles className="h-6 w-6 text-cyan-400" />
+            <h2 className="text-2xl font-bold tracking-tight text-[#F3EEEC] flex items-center gap-2.5">
+              <Sparkles className="h-6 w-6 text-[#A20903]" />
               <span>AI Investigation Workspace</span>
             </h2>
-            <Badge variant="info" size="sm">
+            <Badge variant="neutral" size="sm">
               SOC INVESTIGATOR
             </Badge>
             <Badge
@@ -73,7 +73,7 @@ export function InvestigationWorkspace({
               {investigationMode === 'LIVE' ? 'LIVE REASONING' : investigationMode === 'ERROR' ? 'API DISCONNECTED' : 'DEMO MODE'}
             </Badge>
           </div>
-          <p className="text-xs text-slate-400 mt-1 max-w-2xl">
+          <p className="text-xs text-[#A79B96] mt-1 max-w-2xl">
             Evidence-backed reasoning, root-cause attribution, and automated threat synthesis across correlated e-commerce incidents.
           </p>
         </div>
@@ -82,10 +82,10 @@ export function InvestigationWorkspace({
         {selectedIncident && (
           <Link
             href={`/incidents/${selectedIncident.id}`}
-            className="inline-flex items-center gap-1.5 text-xs text-slate-300 hover:text-white bg-[#0d1524] px-3.5 py-1.5 rounded-md border border-[#1b2a45] hover:border-slate-600 transition-colors"
+            className="inline-flex items-center gap-1.5 text-xs text-[#D0C4C0] hover:text-[#F3EEEC] bg-[#141211] px-3.5 py-1.5 rounded-md border border-[#302A28] hover:border-[#4D4440] transition-colors"
           >
             <span>View Full Incident Dossier</span>
-            <ArrowRight className="h-3.5 w-3.5" />
+            <ArrowRight className="h-3.5 w-3.5 text-[#A20903]" />
           </Link>
         )}
       </div>
@@ -95,7 +95,7 @@ export function InvestigationWorkspace({
         {/* Left Column: Incident Selector Panel */}
         <div className="lg:col-span-1 space-y-3">
           <div className="flex items-center justify-between px-1">
-            <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+            <span className="text-xs font-bold text-[#756B67] uppercase tracking-wider">
               Select Incident ({incidents.length})
             </span>
           </div>
@@ -111,12 +111,12 @@ export function InvestigationWorkspace({
                   onClick={() => setSelectedIncidentId(incident.id)}
                   className={`p-3 rounded-lg border cursor-pointer transition-all ${
                     isSelected
-                      ? 'bg-[#121d31] border-cyan-500 shadow-md ring-1 ring-cyan-500/30'
-                      : 'bg-[#0d1524] border-[#1b2a45] hover:border-slate-600 hover:bg-[#121d31]/40'
+                      ? 'bg-[#1D1A19] border-[#A20903] shadow-md ring-1 ring-[#A20903]/40'
+                      : 'bg-[#141211] border-[#302A28] hover:border-[#4D4440] hover:bg-[#1D1A19]/50'
                   }`}
                 >
                   <div className="flex items-start justify-between gap-1.5">
-                    <span className="font-mono text-xs font-bold text-blue-400">
+                    <span className="font-mono text-xs font-bold text-[#F3EEEC]">
                       {incident.id}
                     </span>
                     <Badge variant={incident.severity} size="sm" pulse={isP0 && isSelected}>
@@ -124,13 +124,13 @@ export function InvestigationWorkspace({
                     </Badge>
                   </div>
 
-                  <h4 className="text-xs font-semibold text-slate-200 mt-1 line-clamp-1">
+                  <h4 className="text-xs font-semibold text-[#F3EEEC] mt-1 line-clamp-1">
                     {incident.title}
                   </h4>
 
-                  <div className="mt-2.5 pt-2 border-t border-[#1b2a45]/60 flex items-center justify-between text-[10px] text-slate-400">
+                  <div className="mt-2.5 pt-2 border-t border-[#302A28] flex items-center justify-between text-[10px] text-[#756B67]">
                     <span className="font-mono">{incident.relatedEventIds.length} Events</span>
-                    <span className="capitalize font-medium text-slate-300">
+                    <span className="capitalize font-medium text-[#D0C4C0]">
                       Risk: {incident.riskScore}/100
                     </span>
                   </div>
@@ -139,8 +139,8 @@ export function InvestigationWorkspace({
             })}
           </div>
 
-          <div className="p-3 rounded-lg bg-[#0d1524] border border-[#1b2a45] text-xs text-slate-400 space-y-1">
-            <span className="text-[10px] uppercase font-bold text-slate-300 block">
+          <div className="p-3 rounded-lg bg-[#141211] border border-[#302A28] text-xs text-[#756B67] space-y-1">
+            <span className="text-[10px] uppercase font-bold text-[#A79B96] block">
               Investigation Method
             </span>
             <p className="text-[11px] leading-relaxed">
@@ -162,18 +162,18 @@ export function InvestigationWorkspace({
           )}
 
           {/* Incident Context Strip */}
-          <div className="bg-[#0d1524] p-4 rounded-lg border border-[#1b2a45] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="bg-[#141211] p-4 rounded-lg border border-[#302A28] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
               <div className="flex items-center gap-2">
-                <span className="font-mono text-xs font-bold text-cyan-400">
+                <span className="font-mono text-xs font-bold text-[#F3EEEC]">
                   {selectedIncident.id}
                 </span>
-                <span className="text-xs text-slate-400">•</span>
-                <span className="text-xs font-semibold text-slate-100">
+                <span className="text-xs text-[#756B67]">•</span>
+                <span className="text-xs font-semibold text-[#F3EEEC]">
                   {selectedIncident.title}
                 </span>
               </div>
-              <p className="text-[11px] text-slate-400 mt-0.5">
+              <p className="text-[11px] text-[#756B67] mt-0.5">
                 Target: {selectedIncident.affectedIdentities[0]}
               </p>
             </div>
@@ -182,7 +182,7 @@ export function InvestigationWorkspace({
               <Badge variant={selectedIncident.severity} size="sm">
                 {selectedIncident.severity}
               </Badge>
-              <span className="text-xs font-mono font-bold text-slate-200 bg-[#090e17] px-2.5 py-1 rounded border border-[#1b2a45]">
+              <span className="text-xs font-mono font-bold text-[#F3EEEC] bg-[#100E0D] px-2.5 py-1 rounded border border-[#302A28]">
                 Risk {selectedIncident.riskScore}/100
               </span>
             </div>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { InvestigationProviderStatus } from '@/types/investigation';
 import { Badge } from '@/components/ui/Badge';
-import { Sparkles, AlertCircle, ShieldAlert } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
 
 interface InvestigationProviderBadgeProps {
   status: InvestigationProviderStatus;
@@ -41,20 +41,20 @@ export function InvestigationProviderBadge({
   };
 
   return (
-    <div className="bg-[#090e17] rounded-lg border border-amber-500/30 p-3 flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs">
+    <div className="bg-[#141211] rounded-lg border border-[#302A28] p-3 flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs">
       <div className="flex items-start gap-2.5">
-        <Sparkles className="h-4 w-4 text-cyan-400 shrink-0 mt-0.5" />
+        <Sparkles className="h-4 w-4 text-[#A2847B] shrink-0 mt-0.5" />
         <div>
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="font-semibold text-slate-200">{providerLabel}</span>
+            <span className="font-semibold text-[#F3EEEC]">{providerLabel}</span>
             {getBadge()}
-            <span className="font-mono text-[10px] text-slate-400">({providerModel})</span>
+            <span className="font-mono text-[10px] text-[#756B67]">({providerModel})</span>
           </div>
-          <p className="text-[11px] text-amber-300/90 mt-0.5">{disclaimer}</p>
+          <p className="text-[11px] text-[#D0C4C0] mt-0.5">{disclaimer}</p>
         </div>
       </div>
 
-      <div className="text-[10px] text-slate-400 font-mono shrink-0 md:text-right">
+      <div className="text-[10px] text-[#756B67] font-mono shrink-0 md:text-right">
         <span>Prompt Schema: v1.4 (Deterministic JSON)</span>
       </div>
     </div>

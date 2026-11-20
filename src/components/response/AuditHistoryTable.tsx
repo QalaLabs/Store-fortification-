@@ -24,11 +24,11 @@ export function AuditHistoryTable({ records }: AuditHistoryTableProps) {
               <ShieldCheck className="h-4 w-4 text-emerald-400" />
               <span>Response Audit Journal</span>
             </CardTitle>
-            <p className="text-[11px] text-slate-400 mt-0.5">
+            <p className="text-[11px] text-[#A79B96] mt-0.5">
               Local simulated audit records with demonstration integrity hashes (simulated ledger)
             </p>
           </div>
-          <span className="text-xs text-slate-400 font-mono">
+          <span className="text-xs text-[#756B67] font-mono">
             {records.length} Audit Entries Logged
           </span>
         </div>
@@ -38,7 +38,7 @@ export function AuditHistoryTable({ records }: AuditHistoryTableProps) {
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs border-collapse">
             <thead>
-              <tr className="border-b border-[#1b2a45] bg-[#0a0f1a] text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
+              <tr className="border-b border-[#302A28] bg-[#100E0D] text-[11px] font-semibold text-[#756B67] uppercase tracking-wider">
                 <th className="py-3 px-4">Audit ID</th>
                 <th className="py-3 px-3">Timestamp</th>
                 <th className="py-3 px-3">Incident Ref</th>
@@ -49,26 +49,26 @@ export function AuditHistoryTable({ records }: AuditHistoryTableProps) {
                 <th className="py-3 px-4 text-right">Integrity Hash</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[#1b2a45]/60 text-slate-300">
+            <tbody className="divide-y divide-[#302A28]/60 text-[#A79B96]">
               {records.map((rec) => (
                 <tr
                   key={rec.auditId}
-                  className="hover:bg-[#121d31]/50 transition-colors cursor-pointer"
+                  className="hover:bg-[#1D1A19]/50 transition-colors cursor-pointer"
                   onClick={() => setSelectedRecord(rec)}
                 >
-                  <td className="py-3.5 px-4 font-mono font-bold text-blue-400 whitespace-nowrap">
+                  <td className="py-3.5 px-4 font-mono font-bold text-[#A2847B] whitespace-nowrap">
                     {rec.auditId}
                   </td>
 
-                  <td className="py-3.5 px-3 font-mono text-slate-400 whitespace-nowrap">
+                  <td className="py-3.5 px-3 font-mono text-[#756B67] whitespace-nowrap">
                     {formatDateTime(rec.timestamp)}
                   </td>
 
-                  <td className="py-3.5 px-3 font-mono text-slate-300 whitespace-nowrap">
+                  <td className="py-3.5 px-3 font-mono text-[#F3EEEC] whitespace-nowrap">
                     <Link
                       href={`/incidents/${rec.incidentId}`}
                       onClick={(e) => e.stopPropagation()}
-                      className="text-blue-400 hover:text-blue-300 underline"
+                      className="text-[#A2847B] hover:text-[#F3EEEC] underline transition-colors"
                     >
                       {rec.incidentId}
                     </Link>
@@ -81,11 +81,11 @@ export function AuditHistoryTable({ records }: AuditHistoryTableProps) {
                   </td>
 
                   <td className="py-3.5 px-3 max-w-[240px]">
-                    <span className="font-semibold text-slate-200 line-clamp-1">{rec.actionTitle}</span>
-                    <span className="text-[11px] text-slate-400 line-clamp-1">{rec.details}</span>
+                    <span className="font-semibold text-[#F3EEEC] line-clamp-1">{rec.actionTitle}</span>
+                    <span className="text-[11px] text-[#756B67] line-clamp-1">{rec.details}</span>
                   </td>
 
-                  <td className="py-3.5 px-3 text-slate-300 whitespace-nowrap">
+                  <td className="py-3.5 px-3 text-[#A79B96] whitespace-nowrap">
                     {rec.actor}
                   </td>
 
@@ -98,8 +98,8 @@ export function AuditHistoryTable({ records }: AuditHistoryTableProps) {
                     </Badge>
                   </td>
 
-                  <td className="py-3.5 px-4 text-right font-mono text-[10px] text-slate-400 whitespace-nowrap">
-                    <span className="bg-[#090e17] px-2 py-0.5 rounded border border-[#1b2a45]">
+                  <td className="py-3.5 px-4 text-right font-mono text-[10px] text-[#756B67] whitespace-nowrap">
+                    <span className="bg-[#070505] px-2 py-0.5 rounded border border-[#302A28]">
                       {rec.immutableHash.slice(0, 16)}...
                     </span>
                   </td>
@@ -111,11 +111,11 @@ export function AuditHistoryTable({ records }: AuditHistoryTableProps) {
 
         {/* Modal for inspectable audit record */}
         {selectedRecord && (
-          <div className="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-            <div className="bg-[#0d1524] border border-[#1b2a45] rounded-xl max-w-lg w-full p-5 shadow-2xl space-y-4">
-              <div className="flex items-center justify-between border-b border-[#1b2a45] pb-3">
+          <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div className="bg-[#141211] border border-[#302A28] rounded-xl max-w-lg w-full p-5 shadow-2xl space-y-4">
+              <div className="flex items-center justify-between border-b border-[#302A28] pb-3">
                 <div className="flex items-center gap-2">
-                  <span className="font-mono text-sm font-bold text-blue-400">
+                  <span className="font-mono text-sm font-bold text-[#A2847B]">
                     {selectedRecord.auditId}
                   </span>
                   <Badge variant="success" size="sm">
@@ -124,33 +124,33 @@ export function AuditHistoryTable({ records }: AuditHistoryTableProps) {
                 </div>
                 <button
                   onClick={() => setSelectedRecord(null)}
-                  className="p-1 rounded text-slate-400 hover:text-white"
+                  className="p-1 rounded text-[#756B67] hover:text-[#F3EEEC] transition-colors"
                 >
                   <X className="h-4 w-4" />
                 </button>
               </div>
 
               <div className="space-y-2 text-xs">
-                <h4 className="font-bold text-slate-100">{selectedRecord.actionTitle}</h4>
-                <p className="text-slate-300 bg-[#090e17] p-3 rounded border border-[#1b2a45]">
+                <h4 className="font-bold text-[#F3EEEC]">{selectedRecord.actionTitle}</h4>
+                <p className="text-[#A79B96] bg-[#070505] p-3 rounded-lg border border-[#302A28] leading-relaxed">
                   {selectedRecord.details}
                 </p>
 
-                <div className="grid grid-cols-2 gap-2 text-slate-400 pt-1">
-                  <div>Incident: <strong className="text-slate-200 font-mono">{selectedRecord.incidentId}</strong></div>
-                  <div>Actor: <strong className="text-slate-200">{selectedRecord.actor}</strong></div>
-                  <div>Action Type: <strong className="text-slate-200">{selectedRecord.category}</strong></div>
-                  <div>Timestamp: <strong className="text-slate-200 font-mono">{formatDateTime(selectedRecord.timestamp)}</strong></div>
+                <div className="grid grid-cols-2 gap-2 text-[#756B67] pt-1">
+                  <div>Incident: <strong className="text-[#F3EEEC] font-mono">{selectedRecord.incidentId}</strong></div>
+                  <div>Actor: <strong className="text-[#F3EEEC]">{selectedRecord.actor}</strong></div>
+                  <div>Action Type: <strong className="text-[#F3EEEC]">{selectedRecord.category}</strong></div>
+                  <div>Timestamp: <strong className="text-[#F3EEEC] font-mono">{formatDateTime(selectedRecord.timestamp)}</strong></div>
                 </div>
 
                 <div className="pt-2">
-                  <span className="text-[10px] uppercase font-semibold text-slate-400 block mb-1">
+                  <span className="text-[10px] uppercase font-semibold text-[#756B67] block mb-1">
                     Integrity Hash (Local Simulated SHA-256):
                   </span>
-                  <div className="font-mono text-[10px] bg-[#05080f] p-2.5 rounded border border-slate-800 text-cyan-300 break-all">
+                  <div className="font-mono text-[10px] bg-[#070505] p-2.5 rounded-lg border border-[#302A28] text-cyan-400 break-all">
                     {selectedRecord.immutableHash}
                   </div>
-                  <span className="text-[10px] text-slate-500 italic block mt-1">
+                  <span className="text-[10px] text-[#756B67] italic block mt-1">
                     *Demonstration cryptographic hash generated in local environment.
                   </span>
                 </div>
@@ -159,7 +159,7 @@ export function AuditHistoryTable({ records }: AuditHistoryTableProps) {
               <div className="flex justify-end pt-2">
                 <button
                   onClick={() => setSelectedRecord(null)}
-                  className="px-4 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium rounded transition-colors"
+                  className="px-4 py-1.5 bg-[#1D1A19] hover:bg-[#302A28] text-[#F3EEEC] text-xs font-medium rounded-lg border border-[#302A28] transition-colors"
                 >
                   Close
                 </button>

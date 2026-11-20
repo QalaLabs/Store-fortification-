@@ -19,16 +19,16 @@ export function SectionHeader({
   return (
     <div
       className={cn(
-        'flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2 border-b border-[#1b2a45]/60',
+        'flex flex-col md:flex-row md:items-center justify-between gap-4 pb-3 border-b border-[#302A28]',
         className
       )}
     >
       <div>
         <div className="flex items-center gap-3">
-          <h2 className="text-xl font-bold tracking-tight text-slate-100">{title}</h2>
+          <h2 className="text-xl font-bold tracking-tight text-[#F3EEEC]">{title}</h2>
           {badge}
         </div>
-        {subtitle && <p className="text-sm text-slate-400 mt-1 max-w-2xl">{subtitle}</p>}
+        {subtitle && <p className="text-sm text-[#A79B96] mt-1 max-w-2xl">{subtitle}</p>}
       </div>
       {actions && <div className="flex items-center gap-2.5 flex-wrap">{actions}</div>}
     </div>
